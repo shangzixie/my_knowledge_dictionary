@@ -227,7 +227,7 @@ display:inline-flex 设置为行内的弹性容器，该设置元素自己不独
 
 ```html
   <ul>
-    <li> 
+    <li>
       <div></div>
     </li>
   </ul>
