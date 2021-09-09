@@ -37,3 +37,11 @@ The X coordinate of the mouse pointer in global (screen) coordinates.
 `MouseEvent.screenY` Read only
 
 The Y coordinate of the mouse pointer in global (screen) coordinates.
+
+`MouseEvent.clientX` Read only
+
+The X coordinate of the mouse pointer in local (DOM content) coordinates.
+
+`MouseEvent.clientY` Read only
+
+The Y coordinate of the mouse pointer in local (DOM content) coordinates.
