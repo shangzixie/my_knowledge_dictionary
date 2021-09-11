@@ -57,7 +57,7 @@ Process ID 1 is usually the init process and is invoked by the kernel at the end
 
 ### fork()
 
-![1](./Image//Operating_System/1.png)
+![1](../Image//Operating_System/1.png)
 
 `fork`后的parent process 和 child process变量互不影响
 
@@ -79,23 +79,23 @@ might close standard output — normally, file descriptor 1—and then open anot
 
 system designers have adopted this hierarchical approach, where components that demand high performance (such as the graphics card) are nearer the CPU. Lower performance components are further away
 
-![2](./Image//Operating_System/2.png)
+![2](../Image//Operating_System/2.png)
 
 Of course, modern systems increasingly use specialized chipsets and faster point-to-point interconnects to improve performance. Such as graphics.
 
 The CPU connects to an I/O chip via Intel’s proprietary DMI (Direct Media Interface), and the rest of the devices connect to this chip via a number of different interconnects.
 
-![3](./Image//Operating_System/3.png)
+![3](../Image//Operating_System/3.png)
 
 ### A Canonical Device (OSTEP)
 
 拿一个抽象的例子来理解I/O
 
-![4](./Image//Operating_System/4.png)
+![4](../Image//Operating_System/4.png)
 
 设备通过interface和操作系统内部打交道。 设备需要需要三个registers组成： status, command, data. status是告诉操作系统该设备的状态，是忙还是闲等，command就是操作系统需要告诉设备进行哪些任务操作
 
-![4](./Image//Operating_System/5.png)
+![4](../Image//Operating_System/5.png)
 
 ### interrupt
 
@@ -103,7 +103,7 @@ The CPU connects to an I/O chip via Intel’s proprietary DMI (Direct Media Inte
 
 the OS can issue a request, put the calling process to sleep, and context switch to another task. When the device is finally finished with the operation, it will raise a hardware interrupt, causing the CPU to jump into the OS at a predetermined interrupt service routine (ISR) or more simply an interrupt handler. The handler is just a piece of operating system code that will finish the request (for example, by reading data and perhaps an error code from the device) and wake the process waiting for the I/O, which can then proceed as desired.
 
-![4](./Image//Operating_System/6.png)
+![4](../Image//Operating_System/6.png)
 
 ### Direct Memory Access (DMA)
 

@@ -24,7 +24,7 @@
 
 #### 内联样式，用style = {{key:'value'}}形式
 
-![jsx](./Image/JSX.png)
+![jsx](../Image/JSX.png)
 
 #### tag内，如果为小写，则认为是html的tag。如果首字母是大写，则为定义react component
 
@@ -37,7 +37,7 @@ component 分为两类： 1. Function Component 2.class Component:
 
 特点：简单组件，无状态, no state
 
-![zujian](./Image/zujian.png)
+![zujian](../Image/zujian.png)
 
 函数首字母大写，渲染时候用`<Demo/>因为之前说过`tag内，如果为小写，则认为是html的tag。如果首字母是大写，则为定义react component`
 
@@ -46,7 +46,7 @@ component 分为两类： 1. Function Component 2.class Component:
 特点： 复杂组件，有状态
 
 因为只有类才包含实例this.state， 所以只有class component 含有状态
-![react_class_comp](./Image/react_class_comp.png)
+![react_class_comp](../Image/react_class_comp.png)
 
 ## Three Core Attributes
 
@@ -59,11 +59,11 @@ Three Core Attributes of Components:
 
 #### 复习：three methods to Bound event in native js
 
-![event](./Image/event.png)
+![event](../Image/event.png)
 
 bound event in react
 
-![react_event](./Image/react_event.png)
+![react_event](../Image/react_event.png)
 
 我们会发现，class component内部的自定义function都有一个特点，其function基本都是作为时间的回调函数.
 如上图，如果我`const w1 = new Weather()`, 我不可能直接`w1.changeWeather()`， 由此发现this的重要性。
@@ -71,13 +71,13 @@ bound event in react
 引出class components简写方式：
 
 在class components内部不用写constructor，直接写赋值语句，就可以直接给实例对象赋值属性.
-![stateJianXie](./Image/stateJianXie.png)
+![stateJianXie](../Image/stateJianXie.png)
 
-![stateJianXie2](./Image/stateJianJie2.png)
+![stateJianXie2](../Image/stateJianJie2.png)
 
 #### 总结
 
-![state1](./Image/state/state1.png)
+![state1](../Image/state/state1.png)
 
 上图2中，箭头函数的this指向object本身。但是类的非箭头函数位于类的prototype内，存放类型为普通函数，this为未定义
 上图3中，this.state是没办法直接赋值的，要借用setState(上上图）
@@ -86,12 +86,13 @@ bound event in react
 
 #### 基本用法
 
-![1](./Image/props/1.png)
+![1](../Image/props/1.png)
 `...p`是语法糖，要保证25行和39行对应
 
 展开运算符`...`：
 
 1.展开一个数组：
+
 ```javascript
     // 展开一个数组：
     let arr1 = [1,2,3]
@@ -113,7 +114,7 @@ bound event in react
 
 #### props进行限制的简写
 
-![3](./Image/props/3.png)
+![3](../Image/props/3.png)
 
 #### props 和 constructor
 
@@ -138,10 +139,10 @@ Typically, in React constructors are only used for two purposes:
 ### refs
 
 不用refs时:
-![1](./Image/React/1.png)
+![1](../Image/React/1.png)
 
 用refs时:
-![2](./Image/React/2.png)
+![2](../Image/React/2.png)
 作用是替代html的`id`
 
 #### 分类
@@ -149,34 +150,34 @@ Typically, in React constructors are only used for two purposes:
 1. 字符串形式refs, 如上图。（官方建议弃用）
 
 2. 回调refs:
-![3](./Image/React/3.png)
+![3](../Image/React/3.png)
 
 ## 4. 收集表单数据
 
 ### 非受控组件：
 
 现用现取，点提交才上传
-![](./Image/React/4.png)
+![](../Image/React/4.png)
 
 ### 受控组件：
 
 随着输入，就能自动维护到dom里面
 
-![](./Image/React/5.png)
+![](../Image/React/5.png)
 
 ## 5. 生命周期
 
 react生命周期(旧)：
 
-![react生命周期(旧)](./Image/React/2_react生命周期(旧).png)
+![react生命周期(旧)](../Image/React/2_react生命周期(旧).png)
 
 react生命周期(新)：
 
-![](./Image/React/3_react生命周期(新).png)
+![](../Image/React/3_react生命周期(新).png)
 
 ## 6. react源码
 
-[源码笔记](./2_React_源码.md)
+[源码笔记](../2_React_源码.md)
 
 ## 7. 不同component之间如何传输数据
 
@@ -226,7 +227,7 @@ PubSub.publishSync('MY TOPIC', 'hello world!');
 
 只页面局部更新， 数据通过AJAX获取并前端异步展示
 
-![](./Image/React/6.png)
+![](../Image/React/6.png)
 
 ```
 

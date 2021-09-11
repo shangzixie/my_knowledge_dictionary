@@ -131,7 +131,7 @@ By the way, I recommend a [web](https://babeljs.io/repl#?browsers=defaults%2C%20
 
 #### If `JSX` is html element
 
-![7](./Image/React/7.png)
+![7](../Image/React/7.png)
 
 there are 3 parameters in `createElement()`:
 
@@ -141,13 +141,13 @@ createElement(type, config, children)
 
 Children can be more than one argument, If html element has multiply elements:
 
-![8](./Image/React/8.png)
+![8](../Image/React/8.png)
 
 React would use a new `reactElement()` as the third and forth parameter.
 
 #### What if `JSX` is a react element
 
-![9](./Image/React/9.png)
+![9](../Image/React/9.png)
 
 the first parameter will be a `function`
 
@@ -336,7 +336,7 @@ const ReactElement = function (type, key, ref, self, source, owner, props) {
 
 open `React.js` in `react/packages/react/src/React.js`. the main purpose of the file is to export functions, objects etc.
 
-![10](./Image/React/10.png)
+![10](../Image/React/10.png)
 
 now we jump to `ReactBaseClasses.js` to explore `React.Component` and `React.PureComponent`
 

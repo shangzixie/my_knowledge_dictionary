@@ -256,7 +256,7 @@ function get() {
 
 ## History State Management (history object in js)
 
-![1](./Image/javascript/1.png)
+![1](../Image/javascript/1.png)
 
 ## "type" in TypeScript
 
