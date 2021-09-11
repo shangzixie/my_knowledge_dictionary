@@ -15,7 +15,6 @@ function Counter() {
     const [count, setCount] = useState(0);
     useEffect(() => {
         const id = setInterval(() => {
-            console.log(count);
             setCount(count + 1);
         }, 1000);
     }, []);
@@ -24,13 +23,36 @@ function Counter() {
 }
 ```
 
-我们期望，useEffect 只执行一次，且后续每隔 1s，count 自动 + 1。然而， 实际上 count 从 0 到 1 后，再没有变化，一直都是 1。难道是 setInterval 没执行？于是我们很疑惑的加上了打印。
+我们期望，useEffect 只执行一次，且后续每隔 1s，count 自动 + 1。然而， 实际上 count 从 0 到 1 后，再没有变化，一直都是 1。难道是 setInterval 没执行？于是我们很疑惑的加上了打印:
 
-![image.png](../Image/React/12.png)
+```javascript
+function Counter() {
+    const [count, setCount] = useState(0);
 
-事实是，setInterval 每次执行的时候，拿到的 count 都是 0。很自然的我们会想到闭包: 每次`setInterval()`外层传递过来的变量`count`为0，所以打印出来的`console.log(count);`就是0
+    useEffect(() => {
+        const id = setInterval(() => {
+            console.log('setInterval内的count:', count);
+            setCount(count + 1);
+        }, 1000);
+    }, []);
 
-但是闭包能完全解释这个现象吗。我们稍加修改再看下这个例子。
+    console.log('我是 count', count);
+
+    return <h1>{count}</h1>;
+}
+```
+
+![image.png](../Image/React/18.png)
+
+
+
+
+
+
+
+事实是，setInterval 每次执行的时候，拿到的 count 都是 0。而函数组件在count变为1后，便不再被触发。
+
+很自然的我们会想到闭包。我们稍加修改再看下这个例子：
 
 ``` javascript
 function Counter() {
@@ -39,12 +61,13 @@ function Counter() {
     useEffect(() => {
         const id = setInterval(() => {
             // 通过 num 来给 count 提供值
-            console.log(num);
-            setCount(++num);
+            console.log("setInterval内的num:", num);
+            setCount(num++);
         }, 1000);
     }, []);
 
     return <h1>{count}</h1>;
+}
 }
 ```
 
@@ -60,8 +83,8 @@ function Counter() {
     useEffect(() => {
         const id = setInterval(() => {
             // 通过 num 来给 count 提供值
-            console.log(num);
-            setCount(++num);
+            console.log('setInterval内的num:', num);
+            setCount(num += 1);
         }, 1000);
     }, []);
 
@@ -73,7 +96,7 @@ function Counter() {
 
 ![image.png](../Image/React/15.png)
 
-闭包依然生效，渲染的 num 一直为0， 而定时器中的 num 却一直在增加，为什么呢？
+渲染的 num 一直为0， 而定时器中的 num 却一直在增加，为什么呢？
 
 ## 每次都是重新执行
 
@@ -96,7 +119,7 @@ function Counter() {
 }
 ```
 
-**useState 应该理解为和普通的 javascript 函数一样，而不是 React 的什么黑魔法**。函数组件更新的时候，useState 会重新执行，对应的，也会重新声明 `[count, setCount]` 这一组常量。只不过 React 对这个函数做了一些特殊处理。比如：首次执行时，会将 useState 的参数初始化给 count，而以后再次执行时，则会直接取上次 setCount (如果有调用) 赋过的值（React 通过某种方式保存起来的）。
+**useState 应该理解为和普通的 javascript 函数一样，而不是 React 的什么黑魔法**。函数组件更新的时候，useState 会重新执行，对应的，也会重新声明 `[count, setCount]` 这一组常量。只不过 React 对这个函数做了一些特殊处理：首次执行时，会将 useState 的参数初始化给 count，而以后再次执行时，则会直接取上次 setCount (如果有调用) 赋过的值（React 通过某种方式保存起来的）。
 
 有了这个概念，就不难知道，定时器里的`setCount(count + 1)` ，这个 count 和每次更新重新声明的 count，也是完全不同的两个常量，只不过它们的值，可能会相等。
 
@@ -186,11 +209,10 @@ count 每次都被重新声明了，setInterval 因为 useEffect 设置了只执
 
 
 
-
-
-
 ## reference
 
 [useState](https://zhuanlan.zhihu.com/p/82589347)
+[useState](https://juejin.cn/post/6846687599625519111#heading-2)
+
 [useEffect](https://zhuanlan.zhihu.com/p/85192975)
 [hooks原理](https://zhuanlan.zhihu.com/p/88734130)
