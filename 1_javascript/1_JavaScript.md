@@ -7,11 +7,11 @@
 * Every function has a `prototype`, pointing to null object. Every instance object has a `__proto__`, also pointing to the same null object (its constructor function's `prototype`).
 &nbsp; [More Details](https://www.youtube.com/watch?v=54sSn-FhTY8&list=PLmOn9nNkQxJH3g-GPoyAj2IB6bQ-qOeKl&index=16)
 
-![prototype](./Image/prototype.png)
+![prototype](../Image/prototype.png)
 
 js has a global object, in its prototype, there are many functions. All object's `prototype` and all instance object's `__proto` points to it.
 
-![prototype_chain](./Image/prototype_chain.png)
+![prototype_chain](../Image/prototype_chain.png)
 
 when execute `fn.test2()`, js will look for the `Fn的实例对象`, when it couldn't find `test2()`, js will continue to look for along prototype chain.
 
@@ -25,9 +25,9 @@ when execute `fn.test2()`, js will look for the `Fn的实例对象`, when it cou
 
 use `super` could inherit the parent's class constructor
 
-![class](./Image/class.png )
+![class](../Image/class.png )
 
-![class2](./Image/class2.png )
+![class2](../Image/class2.png )
 
 ## [getter and setter](https://www.typescripttutorial.net/typescript-tutorial/typescript-getters-setters/)
 
@@ -91,17 +91,17 @@ When you call person.age, the age setter method is invoked.
 
 use `util.promisify`
 
-![promisify](./Image/promisify.png)
+![promisify](../Image/promisify.png)
 
 ### 3.promise封装AJAX请求
 
-![AJAX1](./Image/AJAX1.png)
+![AJAX1](../Image/AJAX1.png)
 
 ### 4.promise state
 
 `PromiseState` is a property of promise instance
 
-![promiseState](./Image/promiseState.png)
+![promiseState](../Image/promiseState.png)
 
 * pending
 * resolve
@@ -114,9 +114,9 @@ Also, `PromiseResult` is also a property of promise instance. 其内部保存着
 
 ### 5.promise 基本流程
 
-![promiseshijian1](./Image/promiseshijian1.png)
+![promiseshijian1](../Image/promiseshijian1.png)
 
-![promiseshijian2](./Image/promiseshijian2.png)
+![promiseshijian2](../Image/promiseshijian2.png)
 
 ### 6.Promise API
 
@@ -161,7 +161,7 @@ p2.catch(reason => {
 
 结果为
 
-![promiseAPI](./Image/promiseAPI.png)
+![promiseAPI](../Image/promiseAPI.png)
 
 ```javascript
 5. Promise.reject()：只快速返回失败的promise对象
@@ -177,7 +177,7 @@ p2.catch(reason => {
     console.log(p3);
 ```
 
-结果为![promiseAPI2](./Image/promiseAPI2.png)
+结果为![promiseAPI2](../Image/promiseAPI2.png)
 
 ```javascript
 6. Promise.all(promises) => {}
@@ -200,7 +200,7 @@ p2.catch(reason => {
     console.log(result2);
 ```
 
-结果为![promiseAPI3](./Image/promiseAPI3.png)
+结果为![promiseAPI3](../Image/promiseAPI3.png)
 
 ### 7.改变状态的resolve和then方法指定的回调谁先执行？
 
@@ -280,64 +280,13 @@ We just looked at two ways to combine types which are similar, but are actually 
 
 [conflict is not allow in interface but in intersections](https://stackoverflow.com/questions/52681316/difference-between-extending-and-intersecting-interfaces-in-typescript)
 
-## for-loop in js
-
-[link1](https://zhuanlan.zhihu.com/p/23812134)
-[link2](https://zhuanlan.zhihu.com/p/58881052)
-
-In JavaScript, `Array` also is a `object`. `Array` in js is a wrong name. Acutually, `Array` in memory is not contiguous, all index in array also is not a offset of memory. Index is a string type (object key). There is no `1`, `2` ... in js index, just `'1'`, `'2'` ...
-
-### for-in
-
-`for in`is not designed for array, but for `object`.
-
-```javascript
-const arr = [1, 2, 3];
-arr.name = "Hello world";
-let index;
-for(index in arr) {
-    console.log("arr[" + index + "] = " + arr[index]);
-}
-```
-
-output:
-
-```javascript
-arr[0] = 1
-arr[1] = 2
-arr[2] = 3
-arr[name] = Hello world
-```
-
-`for-in` also interate prototype link:
-
-```javascript
-Array.prototype.fatherName = "Father";
-const arr = [1, 2, 3];
-arr.name = "Hello world";
-let index;
-for(index in arr) {
-    console.log("arr[" + index + "] = " + arr[index]);
-}
-```
-
-output:
-
-```javascript
-arr[0] = 1
-arr[1] = 2
-arr[2] = 3
-arr[name] = Hello world
-arr[fatherName] = Father
-```
-
 ## [Higher-Order Components](https://reactjs.org/docs/higher-order-components.html)
 
 ## type和interface区别
 
-![6](./Image/javascript/6.png)
+![6](../Image/javascript/6.png)
 
-![5](./Image/javascript/5.png)
+![5](../Image/javascript/5.png)
 
 ## then 和 await区别
 
