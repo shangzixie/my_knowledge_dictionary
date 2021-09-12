@@ -6,9 +6,7 @@
 
 React Hooks的基本用法，[官方文档](https://react.docschina.org/docs/hooks-intro.html) 已经非常详细。本文的目的，是想通过一个简单的例子详细分析一些令人疑惑的问题及其背后的原因。这是系列的第一篇，主要讲解 useState。
 
-## 思考
-
-> 一起来看看这个栗子。
+## 一个栗子引发的思考
 
 ``` javascript
 function Counter() {
@@ -36,7 +34,8 @@ function Counter() {
         }, 1000);
     }, []);
 
-    console.log('我是 count', count);
+    console.log('外部的count:', count);
+    console.log('---------');
 
     return <h1>{count}</h1>;
 }
@@ -44,63 +43,114 @@ function Counter() {
 
 ![image.png](../Image/React/18.png)
 
-
-
-
-
-
-
 事实是，setInterval 每次执行的时候，拿到的 count 都是 0。而函数组件在count变为1后，便不再被触发。
 
-很自然的我们会想到闭包。我们稍加修改再看下这个例子：
+## 为什么
+
+### 闭包
+
+很自然的我们会想到闭包，由于闭包的存在，在函数真正被运行时才可以获取到外部的变量（count）。 比如：
+
+```javascript
+function a() {
+  let count = 0;
+
+  setInterval(() => {
+    console.log(count + 1);
+  }, 1000);
+}
+
+a();
+```
+
+函数`setInterval()`每次被调用时候，才能拿到的外部的变量`count`， 即`0`
+
+![image.png](../Image/React/19.png)
+
+再比如
+
+
+```javascript
+function a() {
+  let count = 0;
+
+  setInterval(() => {
+    console.log(count += 1);
+  }, 1000);
+}
+
+a();
+```
+
+![image.png](../Image/React/20.png)
+
+以上是闭包的特点，在此不多详细讲解，详情请看[闭包](./../1_javascript/闭包.md)
+
+### 验证
+
+根据闭包的特点，这里进行验证
+
+```javascript
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+      const id = setInterval(() => {
+
+        setCount(count + 1);
+        console.log("setInterval内的count:", count);
+      }, 1000);
+  }, []);
+
+  return <h1>{count}</h1>;
+}
+```
+
+![image.png](../Image/React/21.png)
+
+由于我们给 `useEffect`，传递了第二个参数 `[]`，表示这个 effect 没有任何外部依赖，只需要在第一次 render 时运行，无论这个组件被重新 render 多少次，`setInterval` 只会被注册一次。
+
+
+## WHY? 每次都是重新执行
+
+到这里我想说的到底是什么呢？
+
+1. 在 React 中，对于函数式组件来讲，每次更新都会重新执行一遍函数。也就是说，每次更新都会在当前作用域重新声明一个 `let num = 0`。
+2. **useState 应该理解为和普通的 javascript 函数一样，而不是 React 的什么黑魔法**。函数组件更新的时候，useState 会重新执行，对应的，也会重新声明 `[count, setCount]` 这一组常量。只不过 React 对这个函数做了一些特殊处理：首次执行时，会将 useState 的参数初始化给 count，而以后再次执行时，则会直接取上次 setCount (如果有调用) 赋过的值（React 通过某种方式保存起来的）。
+Function Component 每次 render 都是重新执行 Function (产生新的局部变量，闭包)，第一次创建的闭包和第二次创建的闭包没有任何关系。所以，当程序运行起来是，`setInterval` 内的闭包引用到的一直是最初的 count，而 useState 得到的是最新的 count。这是两处代码打印出来结果不一致的根本原因。
+
+### 每次都是重新渲染，为什么 useState 可以读到最新的 value
+
+![image.png](../Image/React/22.png)
+
+## 解决上述问题
+
+### 利用闭包
+
+我们稍加修改，利用变量`num`，解决上述问题：
 
 ``` javascript
 function Counter() {
-    const [count, setCount] = useState(0);
-    let num = 0;
-    useEffect(() => {
-        const id = setInterval(() => {
-            // 通过 num 来给 count 提供值
-            console.log("setInterval内的num:", num);
-            setCount(num++);
-        }, 1000);
-    }, []);
+  const [count, setCount] = useState(0);
+  let num = 0;
 
-    return <h1>{count}</h1>;
-}
+  useEffect(() => {
+      const id = setInterval(() => {
+          // 通过 num 来给 count 提供值
+          setCount(num += 1);
+          console.log("setInterval内的num:", num);
+      }, 1000);
+  }, []);
+
+  return <h1>{count}</h1>;
 }
 ```
 
 ![image.png](../Image/React/13.png)
 
-我们可以看到，借助 num 这个中间变量，我们可以得到想要的结果。但是，同样是闭包，为什么 num 就能记住之前的值而count每次都为0呢？其实问题出在 count 上，继续往下看：
+### 利用全局变量
 
-```javascript
-function Counter() {
-    const [count, setCount] = useState(0);
-    let num = 0;
-
-    useEffect(() => {
-        const id = setInterval(() => {
-            // 通过 num 来给 count 提供值
-            console.log('setInterval内的num:', num);
-            setCount(num += 1);
-        }, 1000);
-    }, []);
-
-    console.log('我是 num', num);
-
-    return <h1>{count}-----{num}</h1>;
-}
-```
-
-![image.png](../Image/React/15.png)
-
-渲染的 num 一直为0， 而定时器中的 num 却一直在增加，为什么呢？
-
-## 每次都是重新执行
-
-到这里我想说的到底是什么呢？我们可以清晰看见渲染出的 num 和 setInterval 中的 num，是不同的。这是因为在 React 中，对于函数式组件来讲，每次更新都会重新执行一遍函数。也就是说，每次更新都会在当前作用域重新声明一个 `let num = 0`，所以，定时器中闭包引用的那个 num，和每次更新时渲染的 num，根本不是同一个。当然，我们可以很轻易的把它们变成同一个。
+将声明放到渲染组件外面
 
 ``` javascript
 let num = 0; // 将声明放到渲染组件外面
@@ -110,42 +160,9 @@ function Counter() {
 }
 ```
 
-嗯，说了这么多，跟 count 有什么关系呢？同理，正因为函数组件每次都会整体重新执行，那么 Hooks 当然也是这样。
+### 利用setState机理
 
-``` javascript
-function Counter() {
-    const [count, setCount] = useState(0);
-    // ...
-}
-```
-
-**useState 应该理解为和普通的 javascript 函数一样，而不是 React 的什么黑魔法**。函数组件更新的时候，useState 会重新执行，对应的，也会重新声明 `[count, setCount]` 这一组常量。只不过 React 对这个函数做了一些特殊处理：首次执行时，会将 useState 的参数初始化给 count，而以后再次执行时，则会直接取上次 setCount (如果有调用) 赋过的值（React 通过某种方式保存起来的）。
-
-有了这个概念，就不难知道，定时器里的`setCount(count + 1)` ，这个 count 和每次更新重新声明的 count，也是完全不同的两个常量，只不过它们的值，可能会相等。
-
-比如，我们尝试把之前的 num，直接用 count 替代。
-
-``` javascript
-function Counter() {
-    // 注意这里变成 let
-    let [count, setCount] = useState(0);
-    useEffect(() => {
-        const id = setInterval(() => {
-            // 这种写法是不好的
-            setCount(++count);
-        }, 1000);
-    }, []);
-    console.log(count);
-    return <h1>{count}</h1>;
-}
-```
-
-![image.png](../Image/React/16.png)
-
-这时候不论是打印还是页面表现都和你期望的一样，**但是这违背了 React 的原则，而且也让程序变得更让人迷惑**。也就导致你并不能清楚地知道：此时渲染的 count 和 setInterval 中的 count 已经不是同一个了。尽管他们的值是相等的。
-
-
-当然，这种场景下 React 也提供了可行的方法，能够每次拿到 count 的最新值，就是给 setCount 传递一个回调函数。
+给 setCount 传递一个回调函数。
 
 ``` javascript
 function Counter() {
@@ -183,31 +200,6 @@ function Counter() {
 ## 小结
 
 count 每次都被重新声明了，setInterval 因为 useEffect 设置了只执行一次的缘故，在第一次更新时闭包引用的 count 始终是 0，后续更新的 count 和它没关系。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## reference
 
