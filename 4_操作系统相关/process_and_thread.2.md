@@ -33,5 +33,5 @@ how does thetrap know which code to run inside the OS?
 
 ## Problem #2: Switching Between Processes
 
-if a process isrunning on the CPU, this by definition means the OS isnotrunning. Ifthe OS is not running, how can it do anything at all? How can the operating systemregain controlof the CPU so that it canswitch between processes?
+if a process is running on the CPU, this by definition means the OS is not running. If the OS is not running, how can it do anything at all? How can the operating systemregain controlof the CPU so that it canswitch between processes?
 
