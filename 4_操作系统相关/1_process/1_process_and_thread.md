@@ -111,4 +111,3 @@ OS maintains a **process list** to track information about every process.
 ### fork(), wait()
 
 APUE(P37)
-
