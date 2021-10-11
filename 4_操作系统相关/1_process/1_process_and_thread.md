@@ -57,11 +57,11 @@ Process ID 1 is usually the init process and is invoked by the kernel at the end
 
 ## fork()
 
-![1](../Image//Operating_System/1.png)
+![1](../../Image//Operating_System/1.png)
 
 `fork`后的parent process 和 child process变量互不影响
 
-我们控制不了parent和child哪一个限制性，他们是由kernel的scheduling algorithm决定的。
+我们控制不了parent和child哪一个先执行，他们是由kernel的scheduling algorithm决定的。
 如果想让the child and parent synchronize their actions, some form of interprocess communication is required. 例如use signals to synchronize a parent and a child after a fork.
 
 ## The Abstraction: A Process
@@ -93,7 +93,7 @@ can use the processor.
 4. Sometimes a systemwill have an **initial** state that the process is in when it is being created.
 5. Also, a process could be placed in a **final** state where it has exited buthas not yet been cleaned up. This final state can be useful as it allows other processes(usually theparentthat created the process) to examine the return codeof the process and see if the just-finished process executed successfully
 
-![7](../Image/Operating_System/7.png)
+![7](../../Image/Operating_System/7.png)
 
 a process can be moved between the ready and running states.
 Being moved from ready to running means the process has been **scheduled**;
