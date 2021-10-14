@@ -19,3 +19,10 @@
 ## [零碎知识点](./零碎知识点)
 
 各种工作证遇到的问题，通过检索后梳理的知识点
+
+------
+
+博客推荐
+
+[Perfection Kills by kangax](http://perfectionkills.com/)
+
