@@ -49,3 +49,7 @@ arr[2] = 3
 arr[name] = Hello world
 arr[fatherName] = Father
 ```
+
+## for-of
+
+design for loop array
