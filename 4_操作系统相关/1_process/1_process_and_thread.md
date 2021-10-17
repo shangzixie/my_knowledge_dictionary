@@ -102,9 +102,18 @@ Once a process has become blocked (e.g., by initiating anI/O operation), the OS 
 
 These types of decisions are made by the OS **scheduler**, a topic we will discuss a few chapters in the future
 
-### process list
+### [proces control block (PCB)](https://www.geeksforgeeks.org/process-table-and-process-control-block-pcb/)
 
-OS maintains a **process list** to track information about every process.
+PCB is a data structure used by computer operating systems to store all the information about a process.
+
+PCB 是进程存在的唯⼀标识，这意味着⼀个进程的存在，必然会有⼀个 PCB，如果进程消失了，那么 PCB 也会随之消失。
+
+![10](./../../Image/Operating_System/10.jpg)
+
+每个 PCB 是如何组织的呢？
+通常是通过链表的⽅式进⾏组织，把具有相同状态的进程链在⼀起，组成各种队列; OS maintains a **process list** to track information about every process.
+
+![11](./../../Image/Operating_System/11.jpg)
 
 ## API
 
