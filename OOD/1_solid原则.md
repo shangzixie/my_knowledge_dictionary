@@ -44,3 +44,5 @@
 
 ![9](../Image/OOD/9.png)
 
+dependency 就是说，A 依赖于 B, 如果 B 改变，A 就不能用.
+
