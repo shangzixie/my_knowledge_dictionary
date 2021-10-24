@@ -47,7 +47,7 @@ So, the first rule of thumb whether a data structure is iterable is try to itera
 
 Having this warm-up experiment, let’s state stricter what an iterable is in the next section.
 
-## 2. Iterable and iterator interfaces
+## 2. [Iterable interface](./iterable_interface.md) interfaces
 
 ![13](../Image/javascript/13.png)
 
@@ -62,3 +62,7 @@ Having this warm-up experiment, let’s state stricter what an iterable is in th
 ## 5. summary
 
 ![16](../Image/javascript/16.png)
+
+## reference
+
+[blog](https://dmitripavlutin.com/javascript-iterators/)
