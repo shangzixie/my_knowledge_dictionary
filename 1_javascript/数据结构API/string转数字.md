@@ -1,0 +1,1 @@
+[link](https://gomakethings.com/converting-strings-to-numbers-with-vanilla-javascript/)
