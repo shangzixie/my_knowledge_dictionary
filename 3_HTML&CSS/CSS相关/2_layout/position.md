@@ -6,4 +6,4 @@ Static positioning is the default that every element gets. It just means "put th
 
 ## relative
 
-relative and static are the same except that once the positioned element has taken its place in the normal flow, you can then modify its final position, including making it overlap other elements on the page by use `left` `right` `bottonm` `top`
+![18](../../../Image/CSS/18.png)
