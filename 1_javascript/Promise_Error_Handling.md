@@ -18,7 +18,7 @@ Summary:
 * promise error couldn't catch by `try-catch`
 * Inside the promise, the `promise.catch()` method will catch the error caused by the `throw` statement and `reject()`.
 * If an error occurs and you don’t have the `promise.catch()` method, the JavaScript engine issues a runtime error and stops the program.
-* `try-catch` will catch error inside a promise, and not delegated it out the promise
+* `try-catch` will catch error inside a promise, and not delegated it out the promise. `try-catch`并不会把错误再往上传递出去
 
 
 ## reference
