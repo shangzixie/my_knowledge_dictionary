@@ -59,6 +59,7 @@ class Person {
 
 access the age `setter` method as follows:
 
+
 ```javascript
 let person = new Person();
 person.age = 10;
