@@ -20,15 +20,15 @@
 
 简单总结：浮动目前来讲它的主要作用就是让页面中的元素可以水平排列，通过浮动可以制作一些水平方向的布局
 
-特点3:
+特点4:
 
 ![3](../../../Image/CSS/31.png)
 
-特点4:
+特点5:
 
 ![3](../../../Image/CSS/32.png)
 
-特点5:
+特点6:
 
 [视频 21:00](https://www.youtube.com/watch?v=c_AX0mblTks&list=PLmOn9nNkQxJFs5KfK5ihVgb8nNccfkgxn&index=60)
 
