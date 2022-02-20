@@ -1,5 +1,7 @@
 # dictionary in python
 
+## add and get
+
 ```python
 dic = {}
 dic[1] = 'b'
@@ -11,4 +13,16 @@ print(1 in dic)
 ```
 b
 True
+```
+
+## iterate
+
+```python
+>>> a_dict = {'color': 'blue', 'fruit': 'apple', 'pet': 'dog'}
+>>> for key in a_dict:
+...     print(key)
+...
+color
+fruit
+pet
 ```
