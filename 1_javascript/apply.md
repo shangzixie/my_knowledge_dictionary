@@ -1,6 +1,6 @@
 # apply()
 
-![72](../Image/javascript/72.png)
+![72](../Image/javascript/75.png)
 
 ## reference
 
