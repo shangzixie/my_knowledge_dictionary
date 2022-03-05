@@ -28,7 +28,7 @@ print ("The original list is : " + str(test_list))
 # using sort() + lambda
 # to sort list of list
 # sort by second index
-test_list.sort(key = lambda test_list: test_list[1])
+test_list.sort(key = lambda x: x[1])
 ```
 
 ### sorted() + itemgetter()
