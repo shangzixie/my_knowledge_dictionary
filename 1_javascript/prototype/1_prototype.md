@@ -1,4 +1,4 @@
-# [prototype] (https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes)
+# [prototype](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes)
 
 ## 定义
 
