@@ -1,4 +1,4 @@
-# [prototype] (https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes)
+# [prototype](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes)
 
 ## 定义
 
@@ -25,7 +25,9 @@ function foo() {
 
 输出:
 ![68](../../Image/javascript/68.png)
+
 为什么有很多方法, 这是人为添加的:
+
 ![69](../../Image/javascript/69.png)
 
 ## prototype作用目的
