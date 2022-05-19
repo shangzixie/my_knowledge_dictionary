@@ -10,3 +10,4 @@
 * change schema: `set search_path to gpmetrics;`
 * agent.log path: `cclog`
 * `10.117.190.12`
+* open docker: `sudo systemctl start docker`
