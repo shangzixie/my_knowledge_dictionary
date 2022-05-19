@@ -9,5 +9,9 @@
 
 ## frontend
 
-* install nvm: `curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | zsh` and `source ~/.zshrc`
+* install nvm:
+  * `wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
+  * `echo 'export NVM_DIR=~/.nvm' >> ~/.zshrc`
+  * `echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> ~/.zshrc`
+  * `source ~/.zshrc`
 * install node `nvm install Fermium`
