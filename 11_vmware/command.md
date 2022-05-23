@@ -10,3 +10,4 @@
 * enter gpperfmon: `psql gpperfmon`
 * change schema: `set search_path to gpmetrics;`
 * agent.log path: `cclog`
+* `10.117.190.86`
