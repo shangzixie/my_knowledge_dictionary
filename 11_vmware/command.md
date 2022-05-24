@@ -12,3 +12,5 @@
 * agent.log path: `cclog`
 * `10.117.190.86`
 * remote docker network: `docker network rm centos7-gpcc-gpdb_nw`
+* gp_log: webserver.log
+* beego_log: gpccws.log
