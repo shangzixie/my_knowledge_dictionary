@@ -1,12 +1,13 @@
 # some command
 
 * open docker: `sudo systemctl start docker`
-* compile all: `make dev.dockerbuild`
 * enter container: `cd docker/cli` and `./hijack.sh gpcc-main`
 * compile path: `ccsrc`
-* restart gpdb: `gpstop -air`
 * if gpcc not in command: `source ~/usr/local/greenplum-cc/gpcc_path.sh`
+* stop gpcc: `gpcc stop`
+* compile all: `make dev.dockerbuild`
 * restart gpcc: `gpcc start`
+* restart gpdb: `gpstop -air`
 * enter gpperfmon: `psql gpperfmon`
 * change schema: `set search_path to gpmetrics;`
 * agent.log path: `cclog`
