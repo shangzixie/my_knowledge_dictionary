@@ -14,3 +14,7 @@
 * `candidate keys`: minimal superkeys. Id is candidate key, `name + dept_name` is also a candidate key. but `id + name` is not a candidate key, because it is not minimal.
 * `primary key`:  a candidate key that is chosen by the database designer as the principal means of identifying tuples within a relation. For example, in relation `classroom (building, room number, capacity)`, `building + room number` is the primary key
 * `foreign-key`: is a field (or collection of fields) in one table, that refers to the PRIMARY KEY in another table. The table with the foreign key is called the referencing/child table, and the table with the primary key is called the referenced/parent table.
+
+## SQL
+
+* `join`:  Queries can access multiple tables at once, or access the same table in such a way that multiple rows of the table are being processed at the same time. Queries that access multiple tables (or multiple instances of the same table) at one time are called join queries.
