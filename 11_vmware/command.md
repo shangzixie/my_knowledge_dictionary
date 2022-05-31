@@ -15,3 +15,12 @@
 * remote docker network: `docker network rm centos7-gpcc-gpdb_nw`
 * gp_log: webserver.log
 * beego_log: gpccws.log
+
+## frontend
+
+* install nvm:
+  * `wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
+  * `echo 'export NVM_DIR=~/.nvm' >> ~/.zshrc`
+  * `echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> ~/.zshrc`
+  * `source ~/.zshrc`
+* install node `nvm install Fermium`
