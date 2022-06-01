@@ -1,3 +1,3 @@
 # files to exclude
 
-`*test*, */e`
+`*test*, */e, *.js`
