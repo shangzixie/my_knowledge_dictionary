@@ -12,6 +12,7 @@ Declarative Partition: List, Range, Hash
 
 after we partition a table by range, we couldn't actually see which table the row is. we need to use `tableoid`
 
+![8](../../Image/database/8.png)
 ![7](../../Image/database/7.png)
 
 ## reference
