@@ -1,5 +1,8 @@
 # setting zsh and plugins
 
+* reset password
+![1](../Image/vmware/1.png)
+
 * setting proxy:
 
     `sudo vim ~/.bashrc`
