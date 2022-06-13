@@ -15,3 +15,9 @@
 * remote docker network: `docker network rm centos7-gpcc-gpdb_nw`
 * gp_log: webserver.log
 * beego_log: gpccws.log
+
+new vm:
+
+* rerun: `r`
+* if modify front-end: `cleanr`
+* `go test` not work: `cc`, `cd build/dev`, `export GPCC_HOME=`pwd``
