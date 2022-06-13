@@ -2,6 +2,7 @@
 
 * reset password
 ![1](../Image/vmware/1.png)
+then use `passwd` to change password
 
 * setting proxy:
 
