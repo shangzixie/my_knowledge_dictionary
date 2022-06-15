@@ -104,3 +104,6 @@ func main() {
     fmt.Println(s2 == nil)
 }
 ```
+
+deep equal: `reflect.DeepEqual(x, y)`
+there is no shallow euqal in slice
