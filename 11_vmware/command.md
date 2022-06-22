@@ -22,3 +22,4 @@ new vm:
 * if modify front-end: `cleanr`
 * `go test` not work: `cc`, `cd build/dev`, `export GPCC_HOME=`pwd``
 * if there is a change in database `make`, then `cc`, `r`
+* cd `extension/metrics_collector`, `make clean`
