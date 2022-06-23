@@ -24,3 +24,11 @@ channel could think as a kind of communication.
 ![27](../Image/golang/27.png)
 ![28](../Image/golang/28.png)
 ![29](../Image/golang/29.png)
+
+## channel close
+
+if close channle, you could read data from channel but not write data into channel
+
+## iterate
+
+could just use `for-range`, before iterate channel, need to close it
