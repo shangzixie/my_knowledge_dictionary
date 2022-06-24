@@ -4,6 +4,12 @@ A view is a named query that provides another way to present data in the databas
 
 Notice that a view does not store data physically except for a materialized view.
 
+## how Views work
+
+![20](../../Image/database/20.png)
+
 ## referernce
 
-[document in PostgreSQL](https://www.postgresqltutorial.com/postgresql-views/)
+[blog about PostgreSQL](https://www.postgresqltutorial.com/postgresql-views/)
+
+[document](https://www.postgresql.org/docs/current/rules-views.html)
