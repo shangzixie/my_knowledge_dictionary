@@ -3,7 +3,7 @@
 golang could open many threads by named goroutine:
 
 we use the keyword `go` to create a thread:
-![5](../Image/golang/5.png)
+![5](../../Image/golang/5.png)
 
 but there will have some problems:
 

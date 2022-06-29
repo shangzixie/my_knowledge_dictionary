@@ -106,7 +106,7 @@ export default class Count extends Component {
 
 ### store: 派发的人
 
-把actio creator封装的数据派发给具体执行动作的
+把actio creator封装的数据派发给具体执行动作的. store是框架实现, 开发者自己用现成的
 
 ```javascript
 /*

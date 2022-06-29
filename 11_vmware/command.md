@@ -15,7 +15,7 @@
 * remote docker network: `docker network rm centos7-gpcc-gpdb_nw`
 * gp_log: webserver.log
 * beego_log: gpccws.log
-
+* change current schema: `set search_path to gpmetrics`
 new vm:
 
 * rerun: `r`

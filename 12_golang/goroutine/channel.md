@@ -1,12 +1,12 @@
 # channel
 
-![6](../Image/golang/6.png)
+![6](../../Image/golang/6.png)
 
 channel could think as a kind of communication.
 
 ## define
 
-![22](../Image/golang/22.png)
+![22](../../Image/golang/22.png)
 
 * channel is a kind of data structure: `queue`
 * FIFO
@@ -14,16 +14,16 @@ channel could think as a kind of communication.
 
 ## how to use
 
-![23](../Image/golang/23.png)
-![24](../Image/golang/24.png)
-![25](../Image/golang/25.png)
+![23](../../Image/golang/23.png)
+![24](../../Image/golang/24.png)
+![25](../../Image/golang/25.png)
 
 ## use case
 
-![26](../Image/golang/26.png)
-![27](../Image/golang/27.png)
-![28](../Image/golang/28.png)
-![29](../Image/golang/29.png)
+![26](../../Image/golang/26.png)
+![27](../../Image/golang/27.png)
+![28](../../Image/golang/28.png)
+![29](../../Image/golang/29.png)
 
 ## channel close
 

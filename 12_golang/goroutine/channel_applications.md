@@ -4,7 +4,7 @@
 
 ![30](../../Image/golang/30.png)
 
-```golang
+```go
 package main
 import (
 	"fmt"
