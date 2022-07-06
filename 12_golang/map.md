@@ -4,7 +4,7 @@
 
 * create nil map:
 
-```golang
+```go
 func main() {
     // Creating and initializing empty map
     // Using var keyword
@@ -15,7 +15,7 @@ func main() {
 
 * create map and initialize them with some data
 
-```golang
+```go
 // Creating and initializing a map
 // Using shorthand declaration and
 // using map literals
@@ -31,7 +31,7 @@ fmt.Println("Map-2: ", map_2)
 
 * using make()
 
-```golang
+```go
 make(map[Key_Type]Value_Type, initial_Capacity)
 make(map[Key_Type]Value_Type)
 
@@ -52,7 +52,7 @@ func main() {
 
 ## iterate map
 
-```golang
+```go
 for key, value := my_map {
 
 }
@@ -60,7 +60,7 @@ for key, value := my_map {
 
 ## add pair
 
-```golang
+```go
 // Main function
 func main() {
     // Creating and initializing a map
@@ -79,7 +79,7 @@ func main() {
 
 ## retrieve a value
 
-```golang
+```go
 // Without value using the blank identifier
 // It will only give check result
 _, check_variable_name:= map_name[key]
@@ -89,6 +89,6 @@ fmt.Println(check_variable_name) // false
 
 ## delete pair
 
-```golang
+```go
 delete(map_name, key)
 ```
