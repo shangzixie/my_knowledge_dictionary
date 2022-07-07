@@ -38,6 +38,3 @@ then use `passwd` to change password
   * `echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> ~/.zshrc`
   * `source ~/.zshrc`
 * install node `nvm install Fermium`
-* yarn mirror: `yarn config set registry https://registry.npm.taobao.org/`
-* yarn mirror recover: `yarn config set registry https://registry.yarnpkg.com`
-* frontend install: `cd frontend; npm config set registry https://registry.npm.taobao.org; npm install -g yarn ; yarn install; yarn upgrade file:../../pivotal-ui/dist`
