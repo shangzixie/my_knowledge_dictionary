@@ -11,7 +11,9 @@
 * change current schema: `set search_path to gpmetrics;`
 * Viewing the path of a relation: `SELECT pg_relation_filepath('tablename');`
 * list all users: `\du`
-* create user
+* current user is: `\conninfo`
+* create super role: `CREATE USER username SUPERUSER;`
+`CREATE USER username WITH SUPERUSER PASSWORD 'passwordstring';`
 
 ## basic operate
 
