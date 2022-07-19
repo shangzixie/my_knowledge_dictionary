@@ -1,11 +1,11 @@
 # package manage in golang
 
-![11](../Image/golang/11.png)
-![12](../Image/golang/12.png)
-![13](../Image/golang/13.png)
-![14](../Image/golang/14.png)
-![15](../Image/golang/15.png)
-![16](../Image/golang/16.png)
+![11](../../Image/golang/11.png)
+![12](../../Image/golang/12.png)
+![13](../../Image/golang/13.png)
+![14](../../Image/golang/14.png)
+![15](../../Image/golang/15.png)
+![16](../../Image/golang/16.png)
 
 ## reference
 
