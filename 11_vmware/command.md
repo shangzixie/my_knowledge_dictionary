@@ -19,6 +19,7 @@
 * yarn mirror: `yarn config set registry https://registry.npm.taobao.org/`
 * yarn mirror recover: `yarn config set registry https://registry.yarnpkg.com`
 * frontend install: `cd frontend; npm config set registry https://registry.npm.taobao.org; npm install -g yarn ; yarn install; yarn upgrade file:../../pivotal-ui/dist`
+* front-end test: `yarn run test:tdd-remote   xxxxx`
 
 new vm:
 
