@@ -9,6 +9,7 @@
 1. the default fillfactor is 90%
 2. indexrelid 是index oid 对应到pg_class中index的oid
 3. indrelid 是 index 对应的表的oid
+4. indkey: is a array that indicate which table columns this index indexes. For example a value of `{1 3}` would mean that the first and the third table columns make up the index entries. Key columns come before non-key (included) columns
 
 ```sql
 SELECT
@@ -54,7 +55,6 @@ select * from idx_data order by tbloid desc limit 5;
  pg_toast_12633_index |         0 |        1 |  12636 |  12637 |         90 |        2 | {1,2}
  pg_toast_12628_index |         0 |        1 |  12631 |  12632 |         90 |        2 | {1,2}
 (5 rows)
-
 ```
 
 ### the second step - ic
@@ -205,28 +205,22 @@ SELECT
     ic.idxname,
     ic.attpos,
     ic.indkey,
-    ic.indkey[ic.attpos],
+    ic.indkey[ic.attpos] as indkeynum,
     ic.reltuples,
     ic.relpages,
     ic.tbloid,
     ic.idxoid,
     ic.fillfactor,
-    coalesce(a1.attnum, a2.attnum) AS attnum,
-    coalesce(a1.attname, a2.attname) AS attname, coalesce(a1.atttypid, a2.atttypid) AS atttypid,
-    CASE WHEN a1.attnum IS NULL THEN ic.idxname
+    coalesce(a1.attnum, a2.attnum) AS attnum, coalesce(a1.attname, a2.attname) AS attname, coalesce(a1.atttypid, a2.atttypid) AS atttypid,
+    CASE WHEN a1.attnum IS NULL
+    THEN ic.idxname
     ELSE ct.relname
     END AS attrelname
 FROM  ic
 JOIN pg_catalog.pg_class ct ON ct.oid = ic.tbloid
-LEFT JOIN pg_catalog.pg_attribute a1
-    ON     --表信息
-        ic.indkey[ic.attpos] <> 0               --某列信息
-        AND a1.attrelid = ic.tbloid
-        AND a1.attnum = ic.indkey[ic.attpos]  --表的列
-LEFT JOIN pg_catalog.pg_attribute a2
-    ON
-        ic.indkey[ic.attpos] = 0
-        AND a2.attrelid = ic.idxoid           --索引列
+LEFT JOIN pg_catalog.pg_attribute a1 ON
+    ic.indkey[ic.attpos] <> 0 AND a1.attrelid = ic.tbloid AND a1.attnum = ic.indkey[ic.attpos]
+LEFT JOIN pg_catalog.pg_attribute a2 ON ic.indkey[ic.attpos] = 0 AND a2.attrelid = ic.idxoid AND a2.attnum = ic.attpos;
 ```
 
 ```sql
@@ -247,41 +241,49 @@ LEFT JOIN pg_catalog.pg_attribute a2
   24675 |  24678 |         90 |      1 | id              |       23 | t
 ```
 
-
-步骤4------------------------------------------------------row_data_stats
+### 步骤4------------------------------------------------------row_data_stats
 
 
 解释
---与pg_stats联查，获取了indextuple的头信息长度index_tuple_hdr_bm
+--与 pg_stats 联查，获取了indextuple的头信息长度 index_tuple_hdr_bm
   nulldatawidth 平均一个indextuple占用的size大小 考虑到了null值率
   is_na:这列是否是name类型
 
+```sql
+SELECT
+    n.nspname,
+    i.tblname,
+    i.idxname,
+    i.reltuples,å
+    i.relpages,
+    i.idxoid,
+    i.fillfactor,
+    current_setting('block_size')::numeric AS bs,
+    CASE -- MAXALIGN: 4 on 32bits, 8 on 64bits (and mingw32 ?)
+        WHEN version() ~ 'mingw32' OR version() ~ '64-bit|x86_64|ppc64|ia64|amd64' THEN 8
+        ELSE 4
+        END AS maxalign,
+        /* per page header, fixed size: 20 for 7.X, 24 for others */
+        24 AS pagehdr,
+        /* per page btree opaque data */
+        16 AS pageopqdata,
+        /* per tuple header: add IndexAttributeBitMapData if some cols are null-able */
+        CASE WHEN max(coalesce(s.null_frac,0)) = 0
+            THEN 2 -- IndexTupleData size
+            ELSE 2 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
+            END AS index_tuple_hdr_bm,
+            /* data len: we remove null values save space using it fractionnal part from stats */
+            sum( (1-coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) AS nulldatawidth,
+            max( CASE WHEN i.atttypid = 'pg_catalog.name'::regtype THEN 1 ELSE 0 END ) > 0 AS is_na
+FROM i
+    JOIN pg_catalog.pg_namespace n ON n.oid = i.relnamespace
+    JOIN pg_catalog.pg_stats s ON s.schemaname = n.nspname
+                                AND s.tablename = i.attrelname
+                                AND s.attname = i.attname
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11;
+```
 
-SELECT n.nspname, i.tblname, i.idxname, i.reltuples, i.relpages,
-              i.idxoid, i.fillfactor, current_setting('block_size')::numeric AS bs,
-              CASE -- MAXALIGN: 4 on 32bits, 8 on 64bits (and mingw32 ?)
-                WHEN version() ~ 'mingw32' OR version() ~ '64-bit|x86_64|ppc64|ia64|amd64' THEN 8
-                ELSE 4
-              END AS maxalign,
-              /* per page header, fixed size: 20 for 7.X, 24 for others */
-              24 AS pagehdr,
-              /* per page btree opaque data */
-              16 AS pageopqdata,
-              /* per tuple header: add IndexAttributeBitMapData if some cols are null-able */
-              CASE WHEN max(coalesce(s.null_frac,0)) = 0
-                  THEN 2 -- IndexTupleData size
-                  ELSE 2 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
-              END AS index_tuple_hdr_bm,
-              /* data len: we remove null values save space using it fractionnal part from stats */
-              sum( (1-coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) AS nulldatawidth,
-              max( CASE WHEN i.atttypid = 'pg_catalog.name'::regtype THEN 1 ELSE 0 END ) > 0 AS is_na
-          FROM i
-            JOIN pg_catalog.pg_namespace n ON n.oid = i.relnamespace
-            JOIN pg_catalog.pg_stats s ON s.schemaname = n.nspname
-                                      AND s.tablename = i.attrelname
-                                      AND s.attname = i.attname
-            GROUP BY 1,2,3,4,5,6,7,8,9,10,11;
-
+```sql
 --创建视图
 create view rows_data_stats as
 SELECT n.nspname, i.tblname, i.idxname, i.reltuples, i.relpages,
@@ -308,8 +310,9 @@ SELECT n.nspname, i.tblname, i.idxname, i.reltuples, i.relpages,
                                       AND s.tablename = i.attrelname
                                       AND s.attname = i.attname
             GROUP BY 1,2,3,4,5,6,7,8,9,10,11;
+```
 
-
+```sql
 ostgres=# select * from rows_data_stats order by idxoid desc limit 10;
   nspname   |     tblname      |            idxname            | reltuples | relpages | idxoid | fillfactor |  bs  | maxalign | pagehdr | pageopqdata |
  index_tuple_hdr_bm | nulldatawidth | is_na 
@@ -340,8 +343,9 @@ ostgres=# select * from rows_data_stats order by idxoid desc limit 10;
 
 ---https://blog.csdn.net/luojinbai/article/details/44957359
 pg_stats描述
+```
 
-步骤5------------------------------------------------------rows_hdr_pdg_stats    
+### 步骤5------------------------------------------------------rows_hdr_pdg_stats    
 
 
 解释
