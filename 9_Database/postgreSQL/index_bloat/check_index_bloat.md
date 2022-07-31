@@ -291,15 +291,15 @@ SELECT n.nspname, i.tblname, i.idxname, i.reltuples, i.relpages,
               CASE -- MAXALIGN: 4 on 32bits, 8 on 64bits (and mingw32 ?)
                 WHEN version() ~ 'mingw32' OR version() ~ '64-bit|x86_64|ppc64|ia64|amd64' THEN 8
                 ELSE 4
-              END AS maxalign,
+                END AS maxalign,
               /* per page header, fixed size: 20 for 7.X, 24 for others */
               24 AS pagehdr,
               /* per page btree opaque data */
               16 AS pageopqdata,
               /* per tuple header: add IndexAttributeBitMapData if some cols are null-able */
               CASE WHEN max(coalesce(s.null_frac,0)) = 0
-                  THEN 2 -- IndexTupleData size
-                  ELSE 2 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
+                THEN 2 -- IndexTupleData size
+                ELSE 2 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
               END AS index_tuple_hdr_bm,
               /* data len: we remove null values save space using it fractionnal part from stats */
               sum( (1-coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) AS nulldatawidth,
@@ -315,7 +315,7 @@ SELECT n.nspname, i.tblname, i.idxname, i.reltuples, i.relpages,
 ```sql
 ostgres=# select * from rows_data_stats order by idxoid desc limit 10;
   nspname   |     tblname      |            idxname            | reltuples | relpages | idxoid | fillfactor |  bs  | maxalign | pagehdr | pageopqdata |
- index_tuple_hdr_bm | nulldatawidth | is_na 
+ index_tuple_hdr_bm | nulldatawidth | is_na
 ------------+------------------+-------------------------------+-----------+----------+--------+------------+------+----------+---------+-------------+
 --------------------+---------------+-------
  public     | t1               | idx_t1_2                      |     1e+06 |     2745 |  24683 |         90 | 8192 |        8 |      24 |          16 |

@@ -2,6 +2,10 @@
 
 [toc]
 
+## why index will bloat
+
+When an UPDATE or DELETE statement is used in PostgreSQL, it does not physically remove that row from the disk. In an UPDATE case, it marks the effected rows as invisible and INSERTs the new version of those rows. While DELETE is little simple the effected rows are just marked as invisibles. These invisibles rows are also called dead rows or dead tuples.Over the time these dead tuples can accumulate to a huge number and in some worst case scenarios, it possible that this accumulation is even greater that the actual rows in the table becomes unusable.
+
 ## Based on check_postgres
 
 One of the common needs for a REINDEX is when indexes become bloated due to either sparse deletions or use of VACUUM FULL (with pre 9.0 versions). An estimator for the amount of bloat in a table has been included in the [check_postgres](http://bucardo.org/wiki/Check_postgres) script, which you can call directly or incorporate into a larger monitoring system. Scripts based on this code and/or its concepts from other sources include:
