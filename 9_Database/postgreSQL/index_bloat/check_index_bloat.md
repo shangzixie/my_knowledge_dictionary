@@ -349,10 +349,9 @@ pg_stats描述
 
 
 解释
-index_tuple_hdr_bm--一个index tuple占用的空间 已经考虑到了对其 tuple头等的长度 
-                   
+index_tuple_hdr_bm--一个index tuple占用的空间 已经考虑到了对其 tuple头等的长度
 
-
+```sql
       SELECT maxalign, bs, nspname, tblname, idxname, reltuples, relpages, idxoid, fillfactor,
             ( index_tuple_hdr_bm +
                 maxalign - CASE -- Add padding to the index tuple header to align on MAXALIGN
@@ -380,7 +379,7 @@ SELECT maxalign, bs, nspname, tblname, idxname, reltuples, relpages, idxoid, fil
                 END
               + nulldatawidth + maxalign - CASE -- Add padding to the data to align on MAXALIGN
                   WHEN nulldatawidth = 0 THEN 0
-                  WHEN nulldatawidth::integer%maxalign = 0 THEN maxalign      
+                  WHEN nulldatawidth::integer%maxalign = 0 THEN maxalign
                   ELSE nulldatawidth::integer%maxalign
                 END
             )::numeric AS nulldatahdrwidth, pagehdr, pageopqdata, is_na
@@ -390,6 +389,7 @@ SELECT maxalign, bs, nspname, tblname, idxname, reltuples, relpages, idxoid, fil
 
 
 postgres=# select * from rows_hdr_pdg_stats order by idxoid desc limit 10;
+
  maxalign |  bs  |  nspname   |     tblname      |            idxname            | reltuples | r
 elpages | idxoid | fillfactor | nulldatahdrwidth | pagehdr | pageopqdata | is_na 
 ----------+------+------------+------------------+-------------------------------+-----------+--
@@ -402,7 +402,7 @@ elpages | idxoid | fillfactor | nulldatahdrwidth | pagehdr | pageopqdata | is_na
    2745 |  24682 |         90 |               16 |      24 |          16 | f
         8 | 8192 | public     | t                | idx_t                         |     1e+06 |  
    3078 |  24678 |         90 |               16 |      24 |          16 | f
-
+```
 
 
 
