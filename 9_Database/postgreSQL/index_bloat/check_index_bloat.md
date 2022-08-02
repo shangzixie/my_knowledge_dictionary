@@ -345,32 +345,30 @@ ostgres=# select * from rows_data_stats order by idxoid desc limit 10;
 pg_stats描述
 ```
 
-### 步骤5------------------------------------------------------rows_hdr_pdg_stats    
-
+### 步骤5------------------------------------------------------rows_hdr_pdg_stats
 
 解释
 index_tuple_hdr_bm--一个index tuple占用的空间 已经考虑到了对其 tuple头等的长度
 
 ```sql
-      SELECT maxalign, bs, nspname, tblname, idxname, reltuples, relpages, idxoid, fillfactor,
-            ( index_tuple_hdr_bm +
-                maxalign - CASE -- Add padding to the index tuple header to align on MAXALIGN
-                  WHEN index_tuple_hdr_bm%maxalign = 0 THEN maxalign
-                  ELSE index_tuple_hdr_bm%maxalign
-                END
-              + nulldatawidth + maxalign - CASE -- Add padding to the data to align on MAXALIGN
-                  WHEN nulldatawidth = 0 THEN 0
-                  WHEN nulldatawidth::integer%maxalign = 0 THEN maxalign
-                  ELSE nulldatawidth::integer%maxalign
-                END
-            )::numeric AS nulldatahdrwidth, pagehdr, pageopqdata, is_na
-            -- , index_tuple_hdr_bm, nulldatawidth -- (DEBUG INFO)
-      FROM  rows_data_stats;
+SELECT maxalign, bs, nspname, tblname, idxname, reltuples, relpages, idxoid, fillfactor,
+( index_tuple_hdr_bm + maxalign -
+    CASE -- Add padding to the index tuple header to align on MAXALIGN
+        WHEN index_tuple_hdr_bm%maxalign = 0 THEN maxalign
+        ELSE index_tuple_hdr_bm%maxalign
+    END
+    + nulldatawidth + maxalign - CASE -- Add padding to the data to align on MAXALIGN
+        WHEN nulldatawidth = 0 THEN 0
+        WHEN nulldatawidth::integer%maxalign = 0 THEN maxalign
+        ELSE nulldatawidth::integer%maxalign
+    END
+)::numeric AS nulldatahdrwidth, pagehdr, pageopqdata, is_na -- , index_tuple_hdr_bm, nulldatawidth -- (DEBUG INFO)
+FROM  rows_data_stats;
+```
 
-
-
+```sql
 --创建视图
-create view rows_hdr_pdg_stats as 
+create view rows_hdr_pdg_stats as
 SELECT maxalign, bs, nspname, tblname, idxname, reltuples, relpages, idxoid, fillfactor,
             ( index_tuple_hdr_bm +
                 maxalign - CASE -- Add padding to the index tuple header to align on MAXALIGN
