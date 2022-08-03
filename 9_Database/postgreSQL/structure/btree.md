@@ -21,6 +21,34 @@ An **index file** contains **index tuples**, each of which is composed of an ind
 
 ![35](../../../Image/database/35.png)
 
+## index tuple structure
+
+All index tuples start with IndexTupleData.  If the HasNulls bit is set, this is followed by an IndexAttributeBitMapData.  The index attribute values follow, beginning at a MAXALIGN boundary.
+
+![39](../../../Image/database/39.png)
+
+the `IndexTupleData` is as flowing code, the `t_tid` is 48 bits (6 bytes), and the `t_info` is 16 bits (2 bytes). so `IndexTupleData` is 8 bytes
+
+```cpp
+typedef struct IndexTupleData
+{
+	ItemPointerData t_tid;		/* reference TID to heap tuple , 48 bits */
+
+	/* ---------------
+	 * t_info is laid out in the following fashion:
+	 *
+	 * 15th (high) bit: has nulls
+	 * 14th bit: has var-width attributes
+	 * 13th bit: AM-defined meaning
+	 * 12-0 bit: size of tuple
+	 * ---------------
+	 */
+
+	unsigned short t_info;		/* various info about tuple, 16 bits */
+
+} IndexTupleData;				/* MORE DATA FOLLOWS AT END OF STRUCT */
+```
+
 ## reference
 
 [the Internals of PostgreSQL](https://www.interdb.jp/pg/pgsql01.html)

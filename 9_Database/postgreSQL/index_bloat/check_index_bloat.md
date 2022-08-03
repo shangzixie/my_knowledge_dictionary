@@ -254,7 +254,7 @@ SELECT
     n.nspname,
     i.tblname,
     i.idxname,
-    i.reltuples,å
+    i.reltuples,
     i.relpages,
     i.idxoid,
     i.fillfactor,
@@ -295,10 +295,10 @@ SELECT n.nspname, i.tblname, i.idxname, i.reltuples, i.relpages,
               /* per page header, fixed size: 20 for 7.X, 24 for others */
               24 AS pagehdr,
               /* per page btree opaque data */
-              16 AS pageopqdata,
+              16 AS pageopqdata, -- maybe the special space in Page Layout
               /* per tuple header: add IndexAttributeBitMapData if some cols are null-able */
               CASE WHEN max(coalesce(s.null_frac,0)) = 0
-                THEN 2 -- IndexTupleData size
+                THEN 2 -- IndexTupleData size               -- maybe the tid+tinfo
                 ELSE 2 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
               END AS index_tuple_hdr_bm,
               /* data len: we remove null values save space using it fractionnal part from stats */
@@ -357,7 +357,8 @@ SELECT maxalign, bs, nspname, tblname, idxname, reltuples, relpages, idxoid, fil
         WHEN index_tuple_hdr_bm%maxalign = 0 THEN maxalign
         ELSE index_tuple_hdr_bm%maxalign
     END
-    + nulldatawidth + maxalign - CASE -- Add padding to the data to align on MAXALIGN
+    + nulldatawidth + maxalign
+    - CASE -- Add padding to the data to align on MAXALIGN
         WHEN nulldatawidth = 0 THEN 0
         WHEN nulldatawidth::integer%maxalign = 0 THEN maxalign
         ELSE nulldatawidth::integer%maxalign
@@ -402,27 +403,23 @@ elpages | idxoid | fillfactor | nulldatahdrwidth | pagehdr | pageopqdata | is_na
    3078 |  24678 |         90 |               16 |      24 |          16 | f
 ```
 
-
-
-步骤6------------------------------------------------------relation_stats    
+### 步骤6------------------------------------------------------relation_stats
 
 解释
 先求出一个页面中可以容纳的indextuple的个数：页面可用空间（总空间-头信息）/（indextuple大小+itemiddata）
 
-就是需要的页面数=总的tuple数/一个页面容纳的tuple数目 
-
+就是需要的页面数=总的tuple数/一个页面容纳的tuple数目
 
 est_pages：未考虑fillfactor时需要的页面数字
 est_pages_ff：考虑了fillfactor后需要的页面数
 
-
-
+```sql
   SELECT coalesce(1 +
-         ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0 -- ItemIdData size + computed avg size of a tuple (nulldatahdrwidth)
-      ) AS est_pages,
+         ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0 -- ItemIdData size + computed avg size of a tuple (nulldatahdrwidth)                  4 is the item pointer; bs is block size(page size)
+      ) AS est_pages, -- the number of pages, not consider fillfactor
       coalesce(1 +
          ceil(reltuples/floor((bs-pageopqdata-pagehdr)*fillfactor/(100*(4+nulldatahdrwidth)::float))), 0
-      ) AS est_pages_ff,
+      ) AS est_pages_ff, -- the number of pages, consider fillfactor
       bs, nspname, tblname, idxname, relpages, fillfactor, is_na
       -- , pgstatindex(idxoid) AS pst, index_tuple_hdr_bm, maxalign, pagehdr, nulldatawidth, nulldatahdrwidth, reltuples -- (DEBUG INFO)
   FROM  rows_hdr_pdg_stats;
@@ -440,20 +437,20 @@ create view relation_stats as
   FROM  rows_hdr_pdg_stats;
 
 postgres=# select * from relation_stats where idxname like 'idx_%';
- est_pages | est_pages_ff |  bs  | nspname | tblname | idxname  | relpages | fillfactor | is_na 
+ est_pages | est_pages_ff |  bs  | nspname | tblname | idxname  | relpages | fillfactor | is_na
 -----------+--------------+------+---------+---------+----------+----------+------------+-------
       2459 |         2734 | 8192 | public  | t       | idx_t    |     3078 |         90 | f
       2459 |         2734 | 8192 | public  | t1      | idx_t1   |     2745 |         90 | f
       2459 |         2734 | 8192 | public  | t1      | idx_t1_2 |     2745 |         90 | f
          2 |            2 | 8192 | public  | t2      | idx_t2   |        2 |         90 | f
 (4 rows)
------------------------------------  
+```
 
+### 步骤7
 
-步骤7------------------------------------------------------
 根据relpages和est_pages算出来多余的空间
 
-
+```sql
 SELECT current_database(), nspname AS schemaname, tblname, idxname, bs*(relpages)::bigint AS real_size,
   bs*(relpages-est_pages)::bigint AS extra_size,
   100 * (relpages-est_pages)::float / relpages AS extra_pct,
@@ -468,6 +465,4 @@ SELECT current_database(), nspname AS schemaname, tblname, idxname, bs*(relpages
 FROM  relation_stats
 ORDER BY nspname, tblname, idxname;
 
-
-
---------------------------------------------------------------------
+```
