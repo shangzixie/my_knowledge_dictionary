@@ -298,8 +298,8 @@ SELECT n.nspname, i.tblname, i.idxname, i.reltuples, i.relpages,
               16 AS pageopqdata, -- maybe the special space in Page Layout
               /* per tuple header: add IndexAttributeBitMapData if some cols are null-able */
               CASE WHEN max(coalesce(s.null_frac,0)) = 0
-                THEN 2 -- IndexTupleData size               -- maybe the tid+tinfo
-                ELSE 2 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
+                THEN 6 -- IndexTupleData size               -- maybe the tid+tinfo
+                ELSE 6 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
               END AS index_tuple_hdr_bm,
               /* data len: we remove null values save space using it fractionnal part from stats */
               sum( (1-coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) AS nulldatawidth,
