@@ -15,6 +15,12 @@ page header total is 24 bytes:
 
 every item pointer points to a tuple, every item pointer is 4 bytes. Line pointers form a simple array, which plays the role of index to the tuples. Each index is numbered sequentially from 1, and called offset number. When a new tuple is added to the page, a new line pointer is also pushed onto the array to point to the new one.
 
+### Special Space (Special Section in page)
+
+`Special Space` which can contain anything the access method wishes to store. For example, b-tree indexes store links to the page's left and right siblings, as well as some other data relevant to the index structure. Ordinary tables do not use a special section at all (indicated by setting `pd_special` to equal the page size).
+
+`pd_special` is for indexes. In the page within tables, it points to the end of the page. (In the page within indexes, it points to the beginning of `Special Space` which is the data area held only by indexes and contains the particular data according to the kind of index types such as B-tree, GiST, GiN, etc.)
+
 ## Tuple Structure
 
 Heap tuples in table pages are classified as a usual data tuple and a TOAST tuple. This section describes only the usual tuple.
