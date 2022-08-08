@@ -17,6 +17,8 @@ every item pointer points to a tuple, every item pointer is 4 bytes. Line pointe
 
 ### Special Space (Special Section in page)
 
+it is 16 bytes, details is in `src/include/access/nbtree.h`, `struct BTPageOpaqueData`
+
 `Special Space` which can contain anything the access method wishes to store. For example, b-tree indexes store links to the page's left and right siblings, as well as some other data relevant to the index structure. Ordinary tables do not use a special section at all (indicated by setting `pd_special` to equal the page size).
 
 `pd_special` is for indexes. In the page within tables, it points to the end of the page. (In the page within indexes, it points to the beginning of `Special Space` which is the data area held only by indexes and contains the particular data according to the kind of index types such as B-tree, GiST, GiN, etc.)
