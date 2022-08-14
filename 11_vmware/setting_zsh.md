@@ -15,6 +15,13 @@ then use `passwd` to change password
     export HTTP_PROXY=http://proxy.vmware.com:3128
     ```
 
+    ```bash
+    export https_proxy=http://proxy-sin02.net.vmware.com:3128
+    export http_proxy=http:///proxy-sin02.net.vmware.com:3128
+    export HTTPS_PROXY=http://proxy-sin02.net.vmware.com:3128
+    export HTTP_PROXY=http://proxy-sin02.net.vmware.com:3128
+    ```
+
 * install zsh: `sudo yum install zsh`
 * install oh my zsh: [link](https://ohmyz.sh/#install)
 * install auto suggestion: [link](https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh)
