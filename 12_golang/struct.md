@@ -2,7 +2,7 @@
 
 ## new a struct
 
-```golang
+```go
  type Address struct {
       name string
       street string
@@ -17,7 +17,7 @@ var a = Address{Name: "Akshay", street: "PremNagar", state:"Uttarakhand", Pincod
 
 * use pointer
 
-```golang
+```go
 func main() {
     // passing the address of struct variable
     // emp8 is a pointer to the Employee struct
