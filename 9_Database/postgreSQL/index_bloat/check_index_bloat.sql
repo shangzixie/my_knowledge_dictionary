@@ -138,7 +138,7 @@ FROM (
                     ic.indkey[ic.attpos] = 0
                     AND a2.attrelid = ic.idxoid
                     AND a2.attnum = ic.attpos
-            ) i
+            ) AS i
             JOIN pg_catalog.pg_namespace n ON n.oid = i.relnamespace
             JOIN pg_catalog.pg_stats s ON s.schemaname = n.nspname
                 AND s.tablename = i.attrelname AND s.attname = i.attname
