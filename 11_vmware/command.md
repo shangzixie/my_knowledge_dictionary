@@ -22,6 +22,7 @@
 * frontend install: `cd frontend; npm config set registry https://registry.npm.taobao.org; npm install -g yarn ; yarn install; yarn upgrade file:../../pivotal-ui/dist`
 * front-end test: `yarn run test:tdd-remote   xxxxx`
 * install gpcc: ![2](../Image/vmware/2.png)
+* dlv path: `/workspace/gpcc_src/`
 
 new vm:
 

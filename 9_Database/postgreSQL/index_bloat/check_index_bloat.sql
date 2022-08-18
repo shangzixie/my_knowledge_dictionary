@@ -146,4 +146,4 @@ FROM (
         ) AS rows_data_stats
     ) AS rows_hdr_pdg_stats
 ) AS relation_stats
-ORDER BY nspname, tblname, idxname;
+ORDER BY bloat_size DESC, bloat_pct DESC, current_database, schemaname, tblname, idxname;
