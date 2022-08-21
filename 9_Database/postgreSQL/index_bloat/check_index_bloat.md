@@ -10,12 +10,14 @@
 2. indexrelid 是index oid 对应到pg_class中index的oid
 3. indrelid 是 index 对应的表的oid
 4. indkey: is a array that indicate which table columns this index indexes. For example a value of `{1 3}` would mean that the first and the third table columns make up the index entries. Key columns come before non-key (included) columns
+5. reltuples:  Number of live tuples in the table.
+6. relpages: the number of pages
 
 ```sql
 SELECT
-    ci.relname AS idxname,
-    ci.reltuples,
-    ci.relpages,
+    ci.relname AS idxname,      -- index name
+    ci.reltuples,               -- Number of live tuples in the table.
+    ci.relpages,                -- the size of page size, default is 8kb in postgres
     i.indrelid AS tbloid,
     i.indexrelid AS idxoid,
     coalesce(substring(array_to_string(ci.reloptions, ' ') from 'fillfactor=([0-9]+)')::smallint, 90) AS fillfactor,
@@ -243,11 +245,15 @@ LEFT JOIN pg_catalog.pg_attribute a2 ON ic.indkey[ic.attpos] = 0 AND a2.attrelid
 
 ### 步骤4------------------------------------------------------row_data_stats
 
-
 解释
 --与 pg_stats 联查，获取了indextuple的头信息长度 index_tuple_hdr_bm
-  nulldatawidth 平均一个indextuple占用的size大小 考虑到了null值率
-  is_na:这列是否是name类型
+
+* `pg_stats.null_frac`: Fraction of column entries that are null
+* `nulldatawidth` 平均一个indextuple占用的size大小 考虑到了null值存在
+* `is_na`:
+    if is true, it means: the index using the name type. Statistics for this type are not correlated to its space use, leading to wrong statistics. A lot of relations from pg_catalog reports negative stats because of this
+* `index_tuple_hdr_bm`: 一个index tuple占用的空间, 加上了null bit map及 max align
+* `bs`: current page size
 
 ```sql
 SELECT
@@ -265,15 +271,15 @@ SELECT
         END AS maxalign,
         /* per page header, fixed size: 20 for 7.X, 24 for others */
         24 AS pagehdr,
-        /* per page btree opaque data */
+        /* per page btree opaque data (the special zone size in page)*/
         16 AS pageopqdata,
         /* per tuple header: add IndexAttributeBitMapData if some cols are null-able */
         CASE WHEN max(coalesce(s.null_frac,0)) = 0
-            THEN 2 -- IndexTupleData size
-            ELSE 2 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
+            THEN 6 -- IndexTupleData size. what is indexTupleData, see btree.md
+            ELSE 6 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size (6 bytes) + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
             END AS index_tuple_hdr_bm,
             /* data len: we remove null values save space using it fractionnal part from stats */
-            sum( (1-coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) AS nulldatawidth,
+            sum( (1-coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) AS nulldatawidth, -- the fraction of non-null column * Average width in bytes of column's entries = the width of non
             max( CASE WHEN i.atttypid = 'pg_catalog.name'::regtype THEN 1 ELSE 0 END ) > 0 AS is_na
 FROM i
     JOIN pg_catalog.pg_namespace n ON n.oid = i.relnamespace
@@ -299,8 +305,8 @@ SELECT n.nspname, i.tblname, i.idxname, i.reltuples, i.relpages,
               /* per tuple header: add IndexAttributeBitMapData if some cols are null-able */
               CASE WHEN max(coalesce(s.null_frac,0)) = 0
                 THEN 6 -- IndexTupleData size               -- maybe the tid+tinfo
-                ELSE 6 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
-              END AS index_tuple_hdr_bm,
+                ELSE 6 + (( 32 + 8 - 1 ) / 8)
+              END AS index_tuple_hdr_bm, -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
               /* data len: we remove null values save space using it fractionnal part from stats */
               sum( (1-coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 1024)) AS nulldatawidth,
               max( CASE WHEN i.atttypid = 'pg_catalog.name'::regtype THEN 1 ELSE 0 END ) > 0 AS is_na
@@ -348,7 +354,6 @@ pg_stats描述
 ### 步骤5------------------------------------------------------rows_hdr_pdg_stats
 
 解释
-index_tuple_hdr_bm--一个index tuple占用的空间 已经考虑到了对其 tuple头等的长度
 
 ```sql
 SELECT maxalign, bs, nspname, tblname, idxname, reltuples, relpages, idxoid, fillfactor,
@@ -415,7 +420,7 @@ est_pages_ff：考虑了fillfactor后需要的页面数
 
 ```sql
   SELECT coalesce(1 +
-         ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0 -- ItemIdData size + computed avg size of a tuple (nulldatahdrwidth)                  4 is the item pointer; bs is block size(page size)
+         ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0 -- ItemIdData size + computed avg size of a tuple (nulldatahdrwidth), 4 is the item pointer; bs is block size(page size)            (all items pointer size + all tuples size) in a page / 
       ) AS est_pages, -- the number of pages, not consider fillfactor
       coalesce(1 +
          ceil(reltuples/floor((bs-pageopqdata-pagehdr)*fillfactor/(100*(4+nulldatahdrwidth)::float))), 0
@@ -450,15 +455,22 @@ postgres=# select * from relation_stats where idxname like 'idx_%';
 
 根据relpages和est_pages算出来多余的空间
 
+extra_size: estimated extra size not used/needed in the table. This extra size is composed by the fillfactor, bloat and alignment padding spaces.
+
 ```sql
-SELECT current_database(), nspname AS schemaname, tblname, idxname, bs*(relpages)::bigint AS real_size,
-  bs*(relpages-est_pages)::bigint AS extra_size,
-  100 * (relpages-est_pages)::float / relpages AS extra_pct,
-  fillfactor,
-  CASE WHEN relpages > est_pages_ff
-    THEN bs*(relpages-est_pages_ff)
-    ELSE 0
-  END AS bloat_size,
+SELECT
+    current_database(),
+    nspname AS schemaname,
+    tblname,
+    idxname,
+    bs*(relpages)::bigint AS real_size,
+    bs*(relpages-est_pages)::bigint AS extra_size,
+    100 * (relpages-est_pages)::float / relpages AS extra_pct,
+    fillfactor,
+    CASE WHEN relpages > est_pages_ff
+        THEN bs*(relpages-est_pages_ff)
+        ELSE 0
+        END AS bloat_size,
   100 * (relpages-est_pages_ff)::float / relpages AS bloat_pct,
   is_na
   -- , 100-(pst).avg_leaf_density AS pst_avg_bloat, est_pages, index_tuple_hdr_bm, maxalign, pagehdr, nulldatawidth, nulldatahdrwidth, reltuples, relpages -- (DEBUG INFO)
