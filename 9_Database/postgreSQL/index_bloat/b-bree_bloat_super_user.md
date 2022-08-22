@@ -1,3 +1,4 @@
+# calculate b-tree bloat by super user
 
 ## idx_data
 
@@ -22,7 +23,7 @@ create view idx_data as
     FROM pg_index i
     JOIN pg_class ci ON ci.oid=i.indexrelid
     WHERE ci.relam=(SELECT oid FROM pg_am WHERE amname = 'btree')
-    AND ci.relpages > 0
+    AND ci.relpages > 0;
 ```
 
 ## idx_data_cross
@@ -38,7 +39,7 @@ SELECT
     fillfactor,
     indkey,
     generate_series(1,indnatts) AS i
-FROM idx_data
+FROM idx_data;
 ```
 
 ## i
@@ -54,7 +55,7 @@ SELECT
     fillfactor,
     CASE WHEN indkey[i]=0 THEN idxoid ELSE tbloid END AS att_rel,
     CASE WHEN indkey[i]=0 THEN i ELSE indkey[i] END AS att_pos
-FROM idx_data_cross
+FROM idx_data_cross;
 ```
 
 ## rows_data_stats
@@ -64,9 +65,10 @@ pagehdr: per page header, fixed size: 20 for 7.X, 24 for others
 pageopqdata: the size of special zone in page
 nulldatawidth: all non-null columns length
 nulldatawidth: index tuple header length (IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8))
-bs: the page's size
+bs: one page's size
 
 ```sql
+CREATE view rows_data_stats AS
 SELECT
     n.nspname,
     ct.relname AS tblname,
@@ -94,15 +96,15 @@ JOIN pg_attribute a ON a.attrelid = i.att_rel AND a.attnum = i.att_pos
 JOIN pg_statistic s ON s.starelid = i.att_rel AND s.staattnum = i.att_pos
 JOIN pg_class ct ON ct.oid = i.tbloid
 JOIN pg_namespace n ON ct.relnamespace = n.oid
-GROUP BY 1,2,3,4,5,6,7,8,9,10
+GROUP BY 1,2,3,4,5,6,7,8,9,10;
 ```
 
 ## rows_hdr_pdg_stats
 
-nulldatahdrwidth: tuple size (has considered null value and MAXALIGN)
+nulldatahdrwidth: one tuple size (has considered null value and MAXALIGN)
 
 ```sql
-CREATE view rows_hdr_pdg_stats
+CREATE view rows_hdr_pdg_stats AS
 SELECT
     maxalign,
     bs,
@@ -127,7 +129,7 @@ SELECT
     pagehdr,
     pageopqdata,
     is_na
-from rows_data_stats
+from rows_data_stats;
 ```
 
 ## relation_stats
@@ -135,16 +137,16 @@ from rows_data_stats
 4 is the item pointer size
 `the total numbers of tuples in a page = bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)`
 reltuples: the number of live tuples in a page
-est_pages: 
+est_pages：the number of used pages (without bloat), not consider fillfactor
+est_pages_ff：the number of used pages, consider fillfactor
 
 
 ```sql
 CREATE view relation_stats AS
-SELECT coalesce(1 +
-        ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0 -- ItemIdData size + computed avg size of a tuple (nulldatahdrwidth)
+SELECT
+    coalesce(1 + ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0 -- ItemIdData size + computed avg size of a tuple (nulldatahdrwidth)
     ) AS est_pages,
-    coalesce(1 +
-        ceil(reltuples/floor((bs-pageopqdata-pagehdr)*fillfactor/(100*(4+nulldatahdrwidth)::float))), 0
+    coalesce(1 + ceil(reltuples/floor((bs-pageopqdata-pagehdr)*fillfactor/(100*(4+nulldatahdrwidth)::float))), 0
     ) AS est_pages_ff,
     bs,
     nspname,
@@ -154,5 +156,5 @@ SELECT coalesce(1 +
     fillfactor,
     is_na
 
-FROM rows_hdr_pdg_stats
+FROM rows_hdr_pdg_stats;
 ```
