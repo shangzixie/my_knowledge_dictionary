@@ -415,12 +415,12 @@ elpages | idxoid | fillfactor | nulldatahdrwidth | pagehdr | pageopqdata | is_na
 
 就是需要的页面数=总的tuple数/一个页面容纳的tuple数目
 
-est_pages：未考虑fillfactor时需要的页面数字
-est_pages_ff：考虑了fillfactor后需要的页面数
+est_pages：if all space is used, what number of pages will used. (not consider fillfactor)
+est_pages_ff：consider fillfactor
 
 ```sql
   SELECT coalesce(1 +
-         ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0 -- ItemIdData size + computed avg size of a tuple (nulldatahdrwidth), 4 is the item pointer; bs is block size(page size)            (all items pointer size + all tuples size) in a page / 
+         ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0 -- ItemIdData size + computed avg size of a tuple (nulldatahdrwidth), 4 is the item pointer; bs is block size(page size)     (all items pointer size + all tuples size) in a page / (one item pointer size + one data row size)
       ) AS est_pages, -- the number of pages, not consider fillfactor
       coalesce(1 +
          ceil(reltuples/floor((bs-pageopqdata-pagehdr)*fillfactor/(100*(4+nulldatahdrwidth)::float))), 0

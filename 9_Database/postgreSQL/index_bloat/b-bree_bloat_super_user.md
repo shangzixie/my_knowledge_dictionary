@@ -135,11 +135,11 @@ from rows_data_stats;
 ## relation_stats
 
 4 is the item pointer size
-`the total numbers of tuples in a page = bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)`
+`how many rows could insert one page = (all items pointer size + all tuples size) in a page / (one item pointer size + one data row size) = bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)`
+`how many pages used if all size is fulfilled = reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)`
 reltuples: the number of live tuples in a page
 est_pages：the number of used pages (without bloat), not consider fillfactor
 est_pages_ff：the number of used pages, consider fillfactor
-
 
 ```sql
 CREATE view relation_stats AS
@@ -157,4 +157,27 @@ SELECT
     is_na
 
 FROM rows_hdr_pdg_stats;
+```
+
+## output
+
+```sql
+SELECT
+    current_database(),
+    nspname AS schemaname,
+    tblname,
+    idxname,
+    bs*(relpages)::bigint AS real_size,
+    bs*(relpages-est_pages)::bigint AS extra_size,
+    100 * (relpages-est_pages)::float / relpages AS extra_pct,
+    fillfactor,
+    CASE
+        WHEN relpages > est_pages_ff
+        THEN bs*(relpages-est_pages_ff)
+        ELSE 0
+    END AS bloat_size,
+    100 * (relpages-est_pages_ff)::float / relpages AS bloat_pct,
+    is_na
+FROM relation_stats
+ORDER BY nspname, tblname, idxname;
 ```
