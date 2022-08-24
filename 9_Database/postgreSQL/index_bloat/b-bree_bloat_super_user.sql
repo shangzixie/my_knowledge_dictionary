@@ -117,4 +117,5 @@ FROM (
         ) AS rows_data_stats
     ) AS rows_hdr_pdg_stats
 ) AS relation_stats
+WHERE is_na IS FALSE
 ORDER BY bloat_size desc, bloat_size desc, idxname;
