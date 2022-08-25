@@ -23,6 +23,10 @@
 * front-end test: `yarn run test:tdd-remote   xxxxx`
 * install gpcc: ![2](../Image/vmware/2.png)
 * dlv path: `/workspace/gpcc_src/`
+* go test with coverage: `go test -coverprofile coverage`
+* run e2e on local
+    `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB6 VIP' -c -o e2e.test`
+    `./e2e.test '-ginkgo.focus=VIP: check pg_class index bloat' -ginkgo.failFast -debug -pghost=127.0.0.1 -pgport=5432 -wshost=127.0.0.1 -wsport=28082`
 
 new vm:
 

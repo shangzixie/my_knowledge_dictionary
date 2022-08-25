@@ -6,6 +6,8 @@
 -- This query is compatible with PostgreSQL 8.2 and after.
 
 SELECT
+    last_operation.last_reindexed as last_reindexed,
+    idxoid,
     current_database(),
     nspname AS schemaname,
     tblname,
@@ -22,19 +24,21 @@ SELECT
     100 * (relpages-est_pages_ff)::float / relpages AS bloat_pct,
     is_na
 FROM (
-    SELECT coalesce(1 +
-         ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0
-      ) AS est_pages,
-      coalesce(1 +
-         ceil(reltuples/floor((bs-pageopqdata-pagehdr)*fillfactor/(100*(4+nulldatahdrwidth)::float))), 0
-      ) AS est_pages_ff,
-      bs,
-      nspname,
-      tblname,
-      idxname,
-      relpages,
-      fillfactor,
-      is_na
+    SELECT
+        idxoid,
+        coalesce(1 +
+            ceil(reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)::float)), 0
+        ) AS est_pages,
+        coalesce(1 +
+            ceil(reltuples/floor((bs-pageopqdata-pagehdr)*fillfactor/(100*(4+nulldatahdrwidth)::float))), 0
+        ) AS est_pages_ff,
+        bs,
+        nspname,
+        tblname,
+        idxname,
+        relpages,
+        fillfactor,
+        is_na
     FROM (
         SELECT maxalign, bs, nspname, tblname, idxname, reltuples, relpages, idxoid, fillfactor,
             ( index_tuple_hdr_bm +
@@ -117,5 +121,13 @@ FROM (
         ) AS rows_data_stats
     ) AS rows_hdr_pdg_stats
 ) AS relation_stats
+LEFT JOIN (
+    SELECT pg_class.relname, pg_class.oid as oid, pg_stat_last_operation.statime as last_reindexed
+    FROM pg_stat_last_operation
+    INNER JOIN pg_class
+    ON pg_class.oid=pg_stat_last_operation.objid
+    WHERE pg_stat_last_operation.stasubtype = 'REINDEX'
+) AS last_operation
+ON relation_stats.idxoid = last_operation.oid
 WHERE is_na IS FALSE
 ORDER BY bloat_size desc, bloat_size desc, idxname;
