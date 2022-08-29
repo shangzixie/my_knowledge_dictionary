@@ -129,5 +129,4 @@ LEFT JOIN (
     WHERE pg_stat_last_operation.stasubtype = 'REINDEX'
 ) AS last_operation
 ON relation_stats.idxoid = last_operation.oid
-WHERE is_na IS FALSE
 ORDER BY bloat_size desc, bloat_size desc, idxname;
