@@ -75,11 +75,7 @@ SELECT
     bs*(relpages-est_pages)::bigint AS extra_size,
     100 * (relpages-est_pages)::float / relpages AS extra_pct,
     fillfactor,
-    CASE
-        WHEN relpages > est_pages_ff
-        THEN bs*(relpages-est_pages_ff)
-        ELSE 0
-    END AS bloat_size,
+    bs*(relpages-est_pages_ff) AS bloat_size,
     100 * (relpages-est_pages_ff)::float / relpages AS bloat_pct,
     is_na
 FROM (
