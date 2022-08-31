@@ -14,6 +14,7 @@
 * current user is: `\conninfo`
 * create super role: `CREATE USER username SUPERUSER;`
 `CREATE USER username WITH SUPERUSER PASSWORD 'passwordstring';`
+* clean all data from table: `TRUNCATE TABLE `
 
 ## basic operate
 
