@@ -67,11 +67,12 @@ FROM (
                 /* per page header, fixed size: 20 for 7.X, 24 for others */
                 24 AS pagehdr,
                 /* per page btree opaque data */
+                /* 16 in postgres, 20 in greenplum */
                 16 AS pageopqdata,
                 /* per tuple header: add IndexAttributeBitMapData if some cols are null-able */
                 CASE WHEN max(coalesce(s.stanullfrac,0)) = 0
-                    THEN 2 -- IndexTupleData size
-                    ELSE 2 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
+                    THEN 6 -- IndexTupleData size
+                    ELSE 6 + (( 32 + 8 - 1 ) / 8) -- IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8)
                 END AS index_tuple_hdr_bm,
                 /* data len: we remove null values save space using it fractionnal part from stats */
                 sum( (1-coalesce(s.stanullfrac, 0)) * coalesce(s.stawidth, 1024)) AS nulldatawidth,
@@ -103,6 +104,7 @@ FROM (
                             ci.relpages,
                             i.indrelid AS tbloid,
                             i.indexrelid AS idxoid,
+                            // TODO: fillfactor
                             coalesce(substring(array_to_string(ci.reloptions, ' ') from 'fillfactor=([0-9]+)')::smallint, 90) AS fillfactor,
                             i.indnatts,
                             string_to_array(textin(int2vectorout(i.indkey)),' ')::int[] AS indkey
