@@ -104,7 +104,7 @@ FROM (
                             ci.relpages,
                             i.indrelid AS tbloid,
                             i.indexrelid AS idxoid,
-                            // TODO: fillfactor
+                            -- TODO: fillfactor
                             coalesce(substring(array_to_string(ci.reloptions, ' ') from 'fillfactor=([0-9]+)')::smallint, 90) AS fillfactor,
                             i.indnatts,
                             string_to_array(textin(int2vectorout(i.indkey)),' ')::int[] AS indkey
@@ -131,4 +131,4 @@ LEFT JOIN (
     WHERE pg_stat_last_operation.stasubtype = 'REINDEX'
 ) AS last_operation
 ON relation_stats.idxoid = last_operation.oid
-ORDER BY bloat_size desc, bloat_size desc, idxname;
+ORDER BY bloat_size desc, bloat_pct desc, idxname;
