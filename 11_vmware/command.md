@@ -25,8 +25,10 @@
 * dlv path: `/workspace/gpcc_src/`
 * go test with coverage: `go test -coverprofile coverage`
 * run e2e on local
+    `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB5 VIP' -c -o e2e.test`
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB6 VIP' -c -o e2e.test`
     `./e2e.test '-ginkgo.focus=VIP: check pg_class index bloat' -ginkgo.failFast -debug -pghost=127.0.0.1 -pgport=5432 -wshost=127.0.0.1 -wsport=28082`
+* run gpdb5 docker: `GPDB_VERSION=gpdb5 ./run.sh`
 new vm:
 
 * rerun: `r`
