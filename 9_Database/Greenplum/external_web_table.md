@@ -46,6 +46,7 @@ For that, you can use either an `INSERT INTO table SELECT * FROM ext\_table
 or a CREATE TABLE table AS SELECT * FROM ext\_table`
 
 ## Conclusions
+
 As you can imagine, this is an extremely powerful feature.
 You can write a script to connect to every other DBMS and dump data or
 produce live data with any programming language (for instance through RSS or Atom or XML feeds).
