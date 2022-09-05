@@ -52,3 +52,7 @@ You can write a script to connect to every other DBMS and dump data or
 produce live data with any programming language (for instance through RSS or Atom or XML feeds).
 Feeding tables with OS script is one of my favourite features,
 and I think the only limitation you have here is your imagination.
+
+## reference
+
+[link](https://www.2ndquadrant.com/en/blog/greenplums_external_web_tables/)
