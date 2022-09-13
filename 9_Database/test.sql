@@ -65,3 +65,5 @@ END;
 $$ LANGUAGE plpgsql;
 REVOKE ALL ON FUNCTION gpcc_schema.analyze_schema_tables(TEXT) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION gpcc_schema.analyze_schema_tables(TEXT) TO gpmon;
+
+
