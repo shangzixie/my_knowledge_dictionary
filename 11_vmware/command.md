@@ -20,7 +20,7 @@
 * yarn mirror: `yarn config set registry https://registry.npm.taobao.org/`
 * yarn mirror recover: `yarn config set registry https://registry.yarnpkg.com`
 * frontend install: `cd frontend; npm config set registry https://registry.npm.taobao.org; npm install -g yarn ; yarn install; yarn upgrade file:../../pivotal-ui/dist`
-* front-end test: `yarn run test:tdd-remote   xxxxx`
+* front-end test: `npm run test:tdd-remote frontend/test/spec/actions/recommendationActionTest.js`
 * install gpcc: ![2](../Image/vmware/2.png)
 * dlv path: `/workspace/gpcc_src/`
 * go test with coverage: `go test -coverprofile coverage`
