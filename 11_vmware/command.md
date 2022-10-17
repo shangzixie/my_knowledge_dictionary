@@ -36,4 +36,4 @@ new vm:
 * `go test` not work: `cc`, `cd build/dev`, `export GPCC_HOME=`pwd``
 * if there is a change in database `make`, then `cc`, `r`
 * cd `extension/metrics_collector`, `make clean`
-* pg log location: cd `$MASTER_DATA_DIRECTORY/`
+* pg log location: `cd $MASTER_DATA_DIRECTORY/`
