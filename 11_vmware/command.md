@@ -37,3 +37,13 @@ new vm:
 * if there is a change in database `make`, then `cc`, `r`
 * cd `extension/metrics_collector`, `make clean`
 * pg log location: `cd $MASTER_DATA_DIRECTORY/`
+
+* use dlv:
+  * `ps aux | grep gpccws` to get the pid
+  * `dlv attach [pid] `
+  * if where are a error:
+    `this could be caused by a kernel security setting, try writing "0" to /proc/sys/kernel/yama/ptrace_scope`
+    try this out of container:
+    `sudo sysctl -w kernel.yama.ptrace_scope=0`
+  * add break point: `b backend/gpmonws/models/common.go:600`
+  * when you attach dlv, it will not run, so use `c`
