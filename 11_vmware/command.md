@@ -47,3 +47,5 @@ new vm:
     `sudo sysctl -w kernel.yama.ptrace_scope=0`
   * add break point: `b backend/gpmonws/models/common.go:600`
   * when you attach dlv, it will not run, so use `c`
+
+* diff in gpmetrics_dump.sql, need to modify: `tools/MS_script/gp6/gpcc_database_install-6.9.0.sh`
