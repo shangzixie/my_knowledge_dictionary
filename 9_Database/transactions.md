@@ -45,7 +45,7 @@ COMMIT;
 
 ## implicit
 
-PostgreSQL actually treats every SQL statement as being executed within a transaction. If you do not issue a `BEGIN` command, then each individual statement has an implicit `BEGIN` and (if successful) `COMMIT` wrapped around it. A group of statements surrounded by `BEGIN` and `COMMIT` is sometimes called a transaction block.
+PostgreSQL actually treats every SQL statement as being executed within a transaction. If want to turn off atomic transaction, Using `BEGIN`. If you do not issue a `BEGIN` command, then each individual statement has an implicit `BEGIN` and (if successful) `COMMIT` wrapped around it. Postgres treats every sql as a atomic transaction. But if using `BEGIN`, and `COMMIT`, all SQLs between the keywords are atomic transaction. A group of statements surrounded by `BEGIN` and `COMMIT` is sometimes called a `transaction block`
 
 ## savepoint
 
