@@ -23,7 +23,9 @@
 * front-end test: `npm run test:tdd-remote frontend/test/spec/actions/recommendationActionTest.js`
 * install gpcc: ![2](../Image/vmware/2.png)
 * dlv path: `/workspace/gpcc_src/`
-* go test with coverage: `go test -coverprofile coverage`
+* go test with coverage: `go test -coverprofile coverage`, `go test --cover`
+* go test to html: `go test -coverprofile=coverage.out; go tool cover -html=coverage.out; rm coverage.out`
+  * then `cp xxx /workspace/gpcc_src/backend/tableinfo`
 * run e2e on local
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB5 VIP' -c -o e2e.test`
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB6 VIP' -c -o e2e.test`
