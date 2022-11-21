@@ -1,7 +1,9 @@
 # some command
 
-* open docker: `sudo systemctl start docker`
+* open docker: `sudo systemctl start docker` `sudo snap start docker`
 * enter container: `cd docker/cli` and `./hijack.sh gpcc-main`
+  * root login: `/bin/bash ./hijack.sh root gpcc-main`
+* root run container: `docker exec -it -u root gpcc-main /bin/bash`
 * compile path: `ccsrc`
 * if gpcc not in command: `source ~/usr/local/greenplum-cc/gpcc_path.sh`
 * recompile: `gpcc stop && make dev.dockerbuild && gpcc start`
