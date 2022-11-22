@@ -22,6 +22,13 @@ export HTTPS_PROXY="http://proxy-sin02.net.vmware.com:3128/";
 export HTTP_PROXY="http://proxy-sin02.net.vmware.com:3128/";
 ```
 
+```bash
+export https_proxy="127.0.0.1:7890";
+export http_proxy="127.0.0.1:7890";
+export HTTPS_PROXY="127.0.0.1:7890";
+export HTTP_PROXY="127.0.0.1:7890";
+```
+
 * install zsh: `sudo yum install zsh`
 * install oh my zsh: [link](https://ohmyz.sh/#install)
 * install auto suggestion: [link](https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh)
