@@ -3,8 +3,8 @@ DECLARE
     tableName TEXT;
 BEGIN
     for i in 1..100 LOOP
-        tableName := 'a'||substr(md5(random()::text), 0, 25);
-        EXECUTE 'CREATE TABLE '||tableName||' (
+        tableName := 'a' || substr(md5(random()::text), 0, 25);
+        EXECUTE 'CREATE TABLE '|| tableName || ' (
             a int,
             b int,
             c int,
