@@ -42,16 +42,6 @@ new vm:
 * cd `extension/metrics_collector`, `make clean`
 * pg log location: `cd $MASTER_DATA_DIRECTORY/`
 
-* use dlv:
-  * `ps aux | grep gpccws` to get the pid
-  * `dlv attach [pid] `
-  * if where are a error:
-    `this could be caused by a kernel security setting, try writing "0" to /proc/sys/kernel/yama/ptrace_scope`
-    try this out of container:
-    `sudo sysctl -w kernel.yama.ptrace_scope=0`
-  * add break point: `b backend/gpmonws/models/common.go:600`
-  * when you attach dlv, it will not run, so use `c`
-
 * diff in gpmetrics_dump.sql, need to modify: `tools/MS_script/gp6/gpcc_database_install-6.9.0.sh`
 
 * setting gp:
@@ -93,3 +83,5 @@ new vm:
     vm.dirty_background_bytes = 1610612736
     vm.dirty_bytes = 4294967296
     ```
+* restart docker:  `sudo systemctl restart docker`
+* start all docker containers: `docker start $(docker ps -a -q)`
