@@ -86,3 +86,4 @@ new vm:
     ```
 * restart docker:  `sudo systemctl restart docker`
 * start all docker containers: `docker start $(docker ps -a -q)`
+* jump to a specific machine in pipline: `fly`
