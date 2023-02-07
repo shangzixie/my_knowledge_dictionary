@@ -16,4 +16,4 @@ so, we could build bitmap for `status`:
 
 if we want to find a data belonging to `Approved`, We just need to scan the corresponding bitmap
 
-[video for more details](https://www.youtube.com/watch?v=5-JYVeM3IQg)下≈≈≈
+[video for more details](https://www.youtube.com/watch?v=5-JYVeM3IQg)
