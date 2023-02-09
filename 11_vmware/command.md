@@ -86,4 +86,5 @@ new vm:
     ```
 * restart docker:  `sudo systemctl restart docker`
 * start all docker containers: `docker start $(docker ps -a -q)`
-* jump to a specific machine in pipline: `fly`
+* jump to a specific machine in pipline: `fly -t gpcc hijack -u https://gpcc.ci.gpdb.pivotal.io/teams/main/pipelines/gpcc_pr/jobs/gpcc6/builds/520`
+
