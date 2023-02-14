@@ -31,6 +31,7 @@
 * run e2e on local
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB5 VIP' -c -o e2e.test`
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB6 VIP' -c -o e2e.test`
+    `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB7 VIP' -c -o e2e.test`
     `./e2e.test '-ginkgo.focus=VIP: check pg_class index bloat' -ginkgo.failFast -debug -pghost=127.0.0.1 -pgport=5432 -wshost=127.0.0.1 -wsport=28082`
     stop GPDB6 container: `docker kill $(docker ps -q)`
 * run gpdb5 docker: `GPDB_VERSION=gpdb5 ./run.sh`
@@ -97,3 +98,7 @@ new vm:
 5. cd docker/cli
 6. GPDB_SRC=(4中的路径)  ./run.sh
 ```
+
+* install go tools in vscode:
+  * export GOPROXY=https://goproxy.cn,direct
+  * gp-command-center git:(test-gp10-query) ✗ source ~/.profile
