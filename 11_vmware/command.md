@@ -90,16 +90,23 @@ new vm:
 * jump to a specific machine in pipline: `fly -t gpcc hijack -u https://gpcc.ci.gpdb.pivotal.io/teams/main/pipelines/gpcc_pr/jobs/gpcc6/builds/520`
 * install gpdb7 docker:
 
-```
+```shell
 1. cd docker
 2. docker pull harbor-repo.vmware.com/dockerhub-proxy-cache/gpccdocker/gpcc-gpdb-cluster-centos7:gpdb7
 3. export GPDB_VERSION=gpdb7
 4. source ./env.sh
-4. clone gpdb7的github, 然后切到GPDB7分支, pwd拿到该git 仓库路径
-5. cd docker/cli
-6. GPDB_SRC=(4中的路径)  ./run.sh
+5. clone gpdb7的github, 然后切到GPDB7分支, pwd拿到该git 仓库路径
+6. cd docker/cli
+7. GPDB_SRC=(4中的路径)  ./run.sh
 ```
 
 * install go tools in vscode:
   * export GOPROXY=https://goproxy.cn,direct
   * gp-command-center git:(test-gp10-query) ✗ source ~/.profile
+
+* build docker image:
+
+```shell
+1. `source ./env.sh`
+2. `
+```
