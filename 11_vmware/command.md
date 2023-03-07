@@ -32,7 +32,7 @@
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB5 VIP' -c -o e2e.test`
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB6 VIP' -c -o e2e.test`
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB7 VIP' -c -o e2e.test`
-    `./e2e.test '-ginkgo.focus=Should save SQL Functions Returning Sets queries in queries history table and plannode' -ginkgo.failFast -debug -pghost=127.0.0.1 -pgport=5432 -wshost=127.0.0.1 -wsport=28082 -skipInit=true`
+    `./e2e.test '-ginkgo.focus=Should send compactLocks in ActivityInfo' -ginkgo.failFast -debug -pghost=127.0.0.1 -pgport=5432 -wshost=127.0.0.1 -wsport=28082 -skipInit=true`
     stop GPDB6 container: `docker kill $(docker ps -q)`
 * run gpdb5 docker: `GPDB_VERSION=gpdb5 ./run.sh`
 new vm:
@@ -94,6 +94,7 @@ new vm:
 1. cd docker
 2. docker pull harbor-repo.vmware.com/dockerhub-proxy-cache/gpccdocker/gpcc-gpdb-cluster-centos7:gpdb7
 3. export GPDB_VERSION=gpdb7
+4. source ./env.sh
 4. clone gpdb7的github, 然后切到GPDB7分支, pwd拿到该git 仓库路径
 5. cd docker/cli
 6. GPDB_SRC=(4中的路径)  ./run.sh
