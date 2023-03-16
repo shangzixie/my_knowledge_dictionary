@@ -32,7 +32,7 @@
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB5 VIP' -c -o e2e.test`
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB6 VIP' -c -o e2e.test`
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB7 VIP' -c -o e2e.test`
-    `./e2e.test '-ginkgo.focus=Should send compactLocks in ActivityInfo' -ginkgo.failFast -debug -pghost=127.0.0.1 -pgport=5432 -wshost=127.0.0.1 -wsport=28082 -skipInit=true`
+    `./e2e.test '-ginkgo.focus=Accuracy' -ginkgo.failFast -debug -pghost=127.0.0.1 -pgport=5432 -wshost=127.0.0.1 -wsport=28082 -skipInit=true`
     stop GPDB6 container: `docker kill $(docker ps -q)`
 * run gpdb5 docker: `GPDB_VERSION=gpdb5 ./run.sh`
 new vm:
