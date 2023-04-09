@@ -34,6 +34,7 @@
     `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB7 VIP' -c -o e2e.test`
     `./e2e.test '-ginkgo.focus=VIP: Test accuracy2' -ginkgo.failFast -debug -pghost=127.0.0.1 -pgport=5432 -wshost=127.0.0.1 -wsport=28082 -skipInit=true`
     stop GPDB6 container: `docker kill $(docker ps -q)`
+* docker start: `docker start $(docker ps -a -q)`
 * run gpdb5 docker: `GPDB_VERSION=gpdb5 ./run.sh`
 new vm:
 
@@ -92,7 +93,7 @@ new vm:
 
 ```shell
 1. cd docker
-2. docker pull harbor-repo.vmware.com/dockerhub-proxy-cache/gpccdocker/gpcc-gpdb-cluster-centos7:gpdb7
+2. docker pull gpccdocker/gpcc-gpdb-cluster-centos7:gpdb7
 3. export GPDB_VERSION=gpdb7
 4. source ./env.sh
 5. clone gpdb7的github, 然后切到GPDB7分支, pwd拿到该git 仓库路径
@@ -112,3 +113,5 @@ new vm:
 ```
 
 * fly: `fly -t gpcc hijack -u xxx`
+
+* gitproxy: `git config --global http.proxy http://proxy.vmware.com:3128/`
