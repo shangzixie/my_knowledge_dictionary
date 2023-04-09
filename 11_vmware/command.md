@@ -116,3 +116,10 @@ new vm:
 
 * gitproxy: `git config --global http.proxy http://proxy.vmware.com:3128/`
 * upgrade go in docker `docker exec --privileged --user root gpcc-main chown -R "$(id -u):$(id -g)" /usr/local`, ` rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz`
+
+* golps multiple packages, set in vscode:
+```
+"gopls": {
+        "experimentalWorkspaceModule": true,
+    }
+```
