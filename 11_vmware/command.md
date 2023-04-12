@@ -123,3 +123,5 @@ new vm:
         "experimentalWorkspaceModule": true,
     }
 ```
+
+* Continuous output log: `tail -f -n +1 ./gpccws.log`
