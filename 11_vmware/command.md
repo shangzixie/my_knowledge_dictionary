@@ -125,3 +125,4 @@ new vm:
 ```
 
 * Continuous output log: `tail -f -n +1 ./gpccws.log`
+* upgrade go in docker `docker exec --privileged --user root gpcc-main chown -R "$(id -u):$(id -g)" /usr/local`, ` rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz`
