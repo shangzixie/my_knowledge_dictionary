@@ -1,6 +1,6 @@
 # print realtime output log using golang to run sh
 
-```golang
+```go
 
 package main
 
