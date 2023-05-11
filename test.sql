@@ -1,161 +1,74 @@
-SELECT MAX(db.oid) AS dbid,
-						SUM(mp.planrows),
-						SUM(sp.tuple_count+sp.ntuples),
-				MAX(mp.rel_oid) AS reloid,
-				(
-					GREATEST(
-					    SUM(mp.planrows),
-						SUM(sp.tuple_count+sp.ntuples)
-					) - LEAST(
-						SUM(mp.planrows),
-						SUM(sp.tuple_count+sp.ntuples)
-					)
-				) / GREATEST(
-					SUM(mp.planrows),
-					SUM(sp.tuple_count+sp.ntuples)
-				) * CASE WHEN MAX(mp.condition) = '' THEN 1 ELSE 0 END AS no_condition_factor,
-				(
-					GREATEST(
-						SUM(mp.planrows),
-						SUM(sp.tuple_count+sp.ntuples)
-					) - LEAST(
-						SUM(mp.planrows),
-						SUM(sp.tuple_count+sp.ntuples)
-					)
-				) / GREATEST(
-					SUM(mp.planrows),
-					SUM(sp.tuple_count+sp.ntuples)
-				) * CASE WHEN MAX(mp.condition) != '' THEN 1 ELSE 0 END AS condition_factor,
-				CASE WHEN MAX(mp.condition) = '' THEN 1 ELSE 0 END AS no_condition_counter,
-				CASE WHEN MAX(mp.condition) != '' THEN 1 ELSE 0 END AS condition_counter
-				FROM gpmetrics.gpcc_plannode_history AS mp,
-						gpmetrics.gpcc_plannode_history AS sp,
-						gpmetrics.gpcc_queries_history AS q,
-						gpmetrics.gpcc_table_info AS info,
-						pg_database AS db
-				WHERE mp.node_type LIKE '%%Scan' AND mp.rel_oid != 0 AND mp.segid = -1 AND sp.segid != -1
-					AND mp.ctime >= CURRENT_TIMESTAMP::timestamp(0) without time zone - INTERVAL '30 days'
-					AND sp.ctime >= CURRENT_TIMESTAMP::timestamp(0) without time zone - INTERVAL '30 days'
-					AND q.ctime >= CURRENT_TIMESTAMP::timestamp(0) without time zone - INTERVAL '30 days'
-					AND mp.nodeid = sp.nodeid AND mp.ssid = sp.ssid AND mp.tmid = sp.tmid AND mp.ccnt = sp.ccnt
-					AND q.ssid = mp.ssid AND q.tmid = mp.tmid AND q.ccnt = mp.ccnt
-					AND info.dbid = db.oid AND info.relid = mp.rel_oid
-					AND (info.last_analyze IS NULL
-						OR (q.tsubmit > info.last_analyze
-							AND (GREATEST(info.last_ins, info.last_del, info.last_upd) IS NULL
-								OR GREATEST(info.last_ins, info.last_del, info.last_upd) > info.last_analyze
-							)
-						)
-					)
-					AND mp.index_name = '' -- filter index scan
-					AND info.relstorage != 'x' -- filter external table
-					AND db.datname = q.db
-				GROUP BY mp.tmid,mp.ssid,mp.ccnt,mp.nodeid;
+			drop schema if exists s1 CASCADE;
+			create schema s1;
+			create table s1.t1 (id int, ctx text) distributed by (id);
+			create table s1.t2 (id int, year int, month int, day int) distributed by (id) partition by range (year) (START (2010) END (2018) EVERY (1), DEFAULT PARTITION other_years);
+			insert into s1.t2 select id, id, id, id from generate_series(1, 20) id;
+			insert into s1.t2 select 1, id, id, id from generate_series(1, 20) id;
+			set optimizer=off;
+			select *, pg_sleep(0.01) from s1.t2 a join s1.t2 b on a.id = a.id;
 
-	SELECT dbid,
-			reloid,
-			CASE
-				WHEN SUM(no_condition_counter) = 0 THEN AVG(condition_factor)
-				WHEN SUM(condition_counter) = 0 THEN AVG(no_condition_factor)
-				ELSE SUM(no_condition_factor) / SUM(no_condition_counter) * 0.7 + SUM(condition_factor) / SUM(condition_counter) * 0.3
-			END AS factor
-			FROM
-			(SELECT MAX(db.oid) AS dbid,
-				MAX(mp.rel_oid) AS reloid,
-				(
-					GREATEST(
-						SUM(mp.planrows),
-						SUM(sp.tuple_count+sp.ntuples)
-					) - LEAST(
-						SUM(mp.planrows),
-						SUM(sp.tuple_count+sp.ntuples)
-					)
-				) / GREATEST(
-					SUM(mp.planrows),
-					SUM(sp.tuple_count+sp.ntuples)
-				) * CASE WHEN MAX(mp.condition) = '' THEN 1 ELSE 0 END AS no_condition_factor,
-				(
-					GREATEST(
-						SUM(mp.planrows),
-						SUM(sp.tuple_count+sp.ntuples)
-					) - LEAST(
-						SUM(mp.planrows),
-						SUM(sp.tuple_count+sp.ntuples)
-					)
-				) / GREATEST(
-					SUM(mp.planrows),
-					SUM(sp.tuple_count+sp.ntuples)
-				) * CASE WHEN MAX(mp.condition) != '' THEN 1 ELSE 0 END AS condition_factor,
-				CASE WHEN MAX(mp.condition) = '' THEN 1 ELSE 0 END AS no_condition_counter,
-				CASE WHEN MAX(mp.condition) != '' THEN 1 ELSE 0 END AS condition_counter
-				FROM gpmetrics.gpcc_plannode_history AS mp,
-						gpmetrics.gpcc_plannode_history AS sp,
-						gpmetrics.gpcc_queries_history AS q,
-						gpmetrics.gpcc_table_info AS info,
-						pg_database AS db
-				WHERE mp.node_type LIKE '%%Scan' AND mp.rel_oid != 0 AND mp.segid = -1 AND sp.segid != -1
-					AND mp.ctime >= CURRENT_TIMESTAMP::timestamp(0) without time zone - INTERVAL '30 days'
-					AND sp.ctime >= CURRENT_TIMESTAMP::timestamp(0) without time zone - INTERVAL '30 days'
-					AND q.ctime >= CURRENT_TIMESTAMP::timestamp(0) without time zone - INTERVAL '30 days'
-					AND mp.nodeid = sp.nodeid AND mp.ssid = sp.ssid AND mp.tmid = sp.tmid AND mp.ccnt = sp.ccnt
-					AND q.ssid = mp.ssid AND q.tmid = mp.tmid AND q.ccnt = mp.ccnt
-					AND info.dbid = db.oid AND info.relid = mp.rel_oid
-					AND (info.last_analyze IS NULL
-						OR (q.tsubmit > info.last_analyze
-							AND (GREATEST(info.last_ins, info.last_del, info.last_upd) IS NULL
-								OR GREATEST(info.last_ins, info.last_del, info.last_upd) > info.last_analyze
-							)
-						)
-					)
-					AND mp.index_name = '' -- filter index scan
-					AND info.relstorage != 'x' -- filter external table
-					AND db.datname = q.db
-				GROUP BY mp.tmid,mp.ssid,mp.ccnt,mp.nodeid
-			) AS table_factor
-		GROUP BY dbid,reloid;
+select r.rolname as user, b.rolname as level
+From pg_catalog.pg_auth_members m
+Join pg_catalog.pg_roles b On m.roleid = b.oid
+Join pg_roles r On m.member = r.oid
+Where r.rolname in ('nightly_selfonly', 'pgbencher') And b.rolname in ('gpcc_basic', 'gpcc_operator', 'gpcc_operator_basic', 'gpcc_operator_readonly');
 
 
+SELECT
+	r.rolname
+	, r.level
+	, rg.rsgname
+FROM
+(
+	SELECT
+		role.rolname
+		, CASE WHEN bool_or(role.rolsuper) THEN 5 ELSE CASE WHEN max(a.rank) IS NOT NULL THEN max(a.rank) ELSE 1 END END AS level
+	FROM pg_roles role
+	LEFT JOIN
+	(
+		SELECT u.rolname, u.oid, rank
+		FROM pg_authid u
+		JOIN (
+			SELECT 2 AS rank, 'gpcc_basic' AS rn
+			UNION ALL
+			SELECT 3, 'gpcc_operator_basic'
+			UNION ALL
+			SELECT 4, 'gpcc_operator'
+			UNION ALL
+			SELECT 3, 'gpcc_operator_readonly'
+		) t ON u.rolname = t.rn
+	) a
+	ON pg_has_role(role.rolname, a.oid, 'member') AND NOT role.rolsuper
+	WHERE role.rolcanlogin AND role.rolname NOT IN ('gpadmin', 'gpmon')
+	GROUP BY role.rolname
+) r
+LEFT JOIN (
+	SELECT rsgname, rolname, rolcanlogin
+	FROM pg_resgroup
+	LEFT JOIN pg_roles ON pg_resgroup.oid=pg_roles.rolresgroup
+	ORDER BY pg_resgroup.oid
+) rg
+ON r.rolname = rg.rolname
+WHERE true
 
-SET gpcc.enable_query_profiling to on;
-SET gpcc.enable_send_instrument to on;
-SET search_path TO recommendation;
-CREATE TABLE recommendation.accuracy2 (c1 int) DISTRIBUTED BY (c1);
-INSERT INTO recommendation.accuracy2 SELECT generate_series(1, 1000);
-ANALYZE recommendation.accuracy2;
-select pg_sleep(120);
-INSERT INTO recommendation.accuracy2 SELECT generate_series(1, 1000);
-SELECT * FROM recommendation.accuracy2
+select r.rolname, r.
 
-select ctime, tmid, ssid, ccnt, query_text from gpmetrics.gpcc_queries_history where query_text like '%accuracy2%';
+SELECT rsgname, rolname
+FROM pg_resgroup
+LEFT JOIN pg_roles r ON pg_resgroup.oid=r.rolresgroup
+WHERE rolname = ANY (ARRAY[])
 
-Select query.query_text, plannode.node_type, plannode.status, plannode.planrows, plannode.ntuples, plannode.tuple_count
-from gpmetrics.gpcc_queries_history as query inner join gpmetrics.gpcc_plannode_history as plannode on query.tmid = plannode.tmid and query.ssid = plannode.ssid AND query.ccnt = plannode.ccnt
-where query.query_text LIKE '%SELECT * FROM accuracy2%'
-order by plannode.ctime desc;
+select abalance from pgbench_accounts limit 1 --PGBenchQueryTest123
+;
 
-Select query.query_text, plannode.node_type, plannode.status, plannode.planrows, plannode.ntuples, plannode.tuple_count from gpmetrics.gpcc_queries_history as query inner join gpmetrics.gpcc_plannode_history as plannode on query.tmid = plannode.tmid and query.ssid = plannode.ssid AND query.ccnt = plannode.ccnt
-order by plannode.ctime desc;
+echo "select abalance from pgbench_accounts limit 1
+--PGBenchQueryTest123
+;" > /tmp/pgbench_query.sql
 
-select * from gpmetrics.gpcc_table_info where table_name = 'accuracy2' and schema='recommendation';
+select nodeid, parent_nodeid, node_type, status, relation_name, rel_oid from gpmetrics.gpcc_plannode_history where ccnt = 11 and ssid = 346 and node_type != '' and status = 'NODE_DONE';
 
-			ar.Select("accuracy").From("gpmetrics.gpcc_table_info t").InnerJoin("pg_database d").On("t.dbid = d.oid").
-				Where("schema = ?", schemaName).And("datname = ?", "gpperfmon").And("table_name = ?", "accuracy2")
-			select accuracy from gpmetrics.gpcc_table_info t inner join pg_database d on t.dbid=d.oid where schema = 'recommendation' and datname = 'gpperfmon' and table_name = 'accuracy2';
-
-truncate gpmetrics.gpcc_plannode_history;
-truncate gpmetrics.gpcc_queries_history;
-truncate gpmetrics.gpcc_table_info;
-drop schema recommendation CASCADE;
-
-
-CREATE TABLE recommendation.test1 (c1 int) DISTRIBUTED BY (c1);
-INSERT INTO recommendation.test1 SELECT generate_series(1, 1000);
-select now();
-select oid from pg_class where relname='test1';
-select * from pg_stat_last_operation where objid=314526;
-
-
-select relid, last_analyze from gpmetrics.gpcc_table_info where table_name = 'test' and schema = 'recommendation';
-
-
-select pg_sleep(30);
+select q.query_text, p.nodeid, p.node_type, p.ssid, p.ccnt, p.status
+from gpmetrics.gpcc_plannode_history p
+inner join gpmetrics.gpcc_queries_history q on p.ssid = q.ssid and p.ccnt = q.ccnt
+where q.db = 'pgbench' and p.node_type != ''
+order by p.ssid, p.ccnt, p.nodeid;
