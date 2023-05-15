@@ -29,9 +29,9 @@
 * go test to html: `go test -coverprofile=coverage.out; go tool cover -html=coverage.out; rm coverage.out`
   * then `cp xxx /workspace/gpcc_src/backend/tableinfo`
 * run e2e on local
-    `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB5 VIP' -c -o e2e.test`
-    `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB6 VIP' -c -o e2e.test`
-    `go test -mod=mod '-gcflags=all=-N -l' '-tags=GPDB7 VIP' -c -o e2e.test`
+    `go test -mod=mod -gcflags='all=-N -l' -tags='GPDB5 VIP' -c -o e2e.test`
+    `go test -mod=mod -gcflags='all=-N -l' -tags='GPDB6 VIP' -c -o e2e.test`
+    `go test -mod=mod -gcflags='all=-N -l' -tags='GPDB7 VIP' -c -o e2e.test`
     `./e2e.test -ginkgo.focus='Run tpcds and test its plannode and history' -ginkgo.failFast -debug -pghost=127.0.0.1 -pgport=5432 -wshost=127.0.0.1 -wsport=28082 -skipInit=true`
     stop GPDB6 container: `docker kill $(docker ps -q)`
 * docker start: `docker start $(docker ps -a -q)`
