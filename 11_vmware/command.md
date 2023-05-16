@@ -105,24 +105,32 @@ new vm:
   * export GOPROXY=https://goproxy.cn,direct
   * gp-command-center git:(test-gp10-query) ✗ source ~/.profile
 
-* build docker image:
-
-```shell
-1. `source ./env.sh`
-2. `
-```
-
 * fly: `fly -t gpcc hijack -u xxx`
 
 * gitproxy: `git config --global http.proxy http://proxy.vmware.com:3128/`
 * upgrade go in docker `docker exec --privileged --user root gpcc-main chown -R "$(id -u):$(id -g)" /usr/local`, ` rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz`
 
 * golps multiple packages, set in vscode:
-```
+
+```json
 "gopls": {
-        "experimentalWorkspaceModule": true,
-    }
+    "experimentalWorkspaceModule": true,
+}
 ```
 
 * Continuous output log: `tail -f -n +1 ./gpccws.log`
 * upgrade go in docker `docker exec --privileged --user root gpcc-main chown -R "$(id -u):$(id -g)" /usr/local`, ` rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz`
+* build a concourse
+
+```shell
+fly -t gpcc sp -p shangzi_test -c perf_baseline_6x.yml \
+    -l vars.yml \
+    -l vars.dev.yml \
+    -v build_target=dev \
+    -v gpcc_version=6.8.2 \
+    -v gpdb_version=6.21.1 \
+    -v gpcc_branch=test_query_history_and_plannode_by_benchmark \
+    --check-creds
+```
+
+* delete a concourse: `fly -t tutorial destroy-pipeline -p hello-world`
