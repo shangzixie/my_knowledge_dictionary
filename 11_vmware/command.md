@@ -133,4 +133,4 @@ fly -t gpcc sp -p shangzi_test -c perf_baseline_6x.yml \
     --check-creds
 ```
 
-* delete a concourse: `fly -t tutorial destroy-pipeline -p hello-world`
+* delete a concourse: `fly -t gpcc destroy-pipeline -p hello-world`
