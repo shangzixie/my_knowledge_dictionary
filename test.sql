@@ -72,3 +72,25 @@ from gpmetrics.gpcc_plannode_history p
 inner join gpmetrics.gpcc_queries_history q on p.ssid = q.ssid and p.ccnt = q.ccnt
 where q.db = 'pgbench' and p.node_type != ''
 order by p.ssid, p.ccnt, p.nodeid;
+
+
+*/20 * * * * /home/gpadmin/workspace/gp-command-center/tools/useful_script/longevity_test/pgbench_select.sh
+#*/30 * * * * /home/gpadmin/workspace/gp-command-center/tools/useful_script/longevity_test/icw_regression.sh
+30 1 * * THU,SUN  /home/gpadmin/scripts/make_more_space.sh > /home/gpadmin/scripts/space.log 2>&1
+20 9 * * *  /home/gpadmin/scripts/testlong.sh 4 > /home/gpadmin/scripts/testlong.log 2>&1
+0 * * * *  /home/gpadmin/scripts/clean_table.sh > /home/gpadmin/scripts/clean_table.log 2>&1
+0 22 1,15 * * cd /home/gpadmin/workspace/gp-command-center; ./tools/useful_script/longevity_test/reinstall.sh > /home/gpadmin/scripts/reinstall.log 2>&1
+12 20 * * *  /home/gpadmin/scripts/tpcds_test_with_orca.sh  > /home/gpadmin/scripts/tpcds_test_with_orca.log 2>&1
+#0 20 * * *  /home/gpadmin/scripts/tpcds_test_with_orca.sh  > /home/gpadmin/scripts/tpcds_test_with_orca.log 2>&1
+0 22 * * *  /home/gpadmin/scripts/tpcds_test_without_orca.sh  > /home/gpadmin/scripts/tpcds_test_without_orca.log 2>&1
+
+
+#*/20 * * * * /home/gpadmin/workspace/gp-command-center/tools/useful_script/longevity_test/pgbench_select.sh
+#*/30 * * * * /home/gpadmin/workspace/gp-command-center/tools/useful_script/longevity_test/icw_regression.sh
+30 1 * * THU,SUN  /home/gpadmin/scripts/make_more_space.sh > /home/gpadmin/scripts/space.log 2>&1
+#20 9 * * *  /home/gpadmin/scripts/testlong.sh 4 > /home/gpadmin/scripts/testlong.log 2>&1
+0 * * * *  /home/gpadmin/scripts/clean_table.sh > /home/gpadmin/scripts/clean_table.log 2>&1
+#0 22 1,15 * * cd /home/gpadmin/workspace/gp-command-center; ./tools/useful_script/longevity_test/reinstall.sh > /home/gpadmin/scripts/reinstall.log 2>&1
+#12 20 * * *  /home/gpadmin/scripts/tpcds_test_with_orca.sh  > /home/gpadmin/scripts/tpcds_test_with_orca.log 2>&1
+#0 20 * * *  /home/gpadmin/scripts/tpcds_test_with_orca.sh  > /home/gpadmin/scripts/tpcds_test_with_orca.log 2>&1
+#0 22 * * *  /home/gpadmin/scripts/tpcds_test_without_orca.sh  > /home/gpadmin/scripts/tpcds_test_without_orca.log 2>&1
