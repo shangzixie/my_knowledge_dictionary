@@ -134,3 +134,5 @@ fly -t gpcc sp -p shangzi_test -c perf_baseline_6x.yml \
 ```
 
 * delete a concourse: `fly -t gpcc destroy-pipeline -p hello-world`
+
+* get gpmon password: `cat ~/.pgpass`
