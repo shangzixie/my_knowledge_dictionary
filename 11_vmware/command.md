@@ -141,3 +141,5 @@ fly -t gpcc sp -p shangzi_test -c perf_baseline_6x.yml \
 ```shell
 docker ps -q | xargs -L 1 -P `docker ps | wc -l` docker logs --since 30s -f`
 ```
+
+* install go dependency timeout: `go env -w GOPROXY=https://goproxy.cn`
