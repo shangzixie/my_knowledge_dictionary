@@ -9,10 +9,10 @@ then use `passwd` to change password
     `sudo vim ~/.bashrc`
 
 ```bash
-export https_proxy="http://proxy.vmware.com:3128/";
-export http_proxy="http://proxy.vmware.com:3128/";
-export HTTPS_PROXY="http://proxy.vmware.com:3128/";
-export HTTP_PROXY="http://proxy.vmware.com:3128/";
+export https_proxy="http://proxy.vmware.com:3128";
+export http_proxy="http://proxy.vmware.com:3128";
+export HTTPS_PROXY="http://proxy.vmware.com:3128";
+export HTTP_PROXY="http://proxy.vmware.com:3128";
 ```
 
 ```bash
