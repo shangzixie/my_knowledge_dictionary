@@ -182,11 +182,14 @@ Use the following format in json:
 > using openai gpt-3.5-turbo-16k
 
 ***1. match the specified personality: pass ✅***
+
 ***2. Respond using the specified format: pass ✅***
 > even not need use context to prompt, its performance is better than ***Json format response*** above
 
 ***3. Maintain awareness of the context: pass ✅***
+
 ***4. Retain information from long-term memory as provided in the prompt: TODO***
+
 ***5. Disregard the injected prompt, but retain its identity: pass ✅***
 
 ```
