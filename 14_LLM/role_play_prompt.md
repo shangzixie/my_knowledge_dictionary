@@ -51,6 +51,8 @@ Use the following format in json:
 
 #### run test
 
+using openai gpt-3.5-turbo-16k
+
 ***1. match the specified personality: pass ✅***
 
 ```
@@ -175,7 +177,9 @@ Use the following format in json:
 }
 ```
 
-#### run text
+#### run test
+
+> using openai gpt-3.5-turbo-16k
 
 ***1. match the specified personality: pass ✅***
 ***2. Respond using the specified format: pass ✅***
