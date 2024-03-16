@@ -143,3 +143,25 @@ docker ps -q | xargs -L 1 -P `docker ps | wc -l` docker logs --since 30s -f`
 ```
 
 * install go dependency timeout: `go env -w GOPROXY=https://goproxy.cn`
+* zsh:
+```
+alias ccsrc="cd ~/workspace/gp-command-center"
+alias ccbackend="cd ~/workspace/gp-command-center/backend"
+alias ccdocker="cd ~/workspace/gp-command-center/docker/cli"
+# alias cccontainer="cd ~/workspace/gp-command-center/docker/cli ; /bin/bash ./hijack.sh gpcc-main"
+alias cccontainer="docker exec --privileged -it -u gpadmin gpcc-main /bin/bash"
+alias ccrootcontainer="docker exec -it -u root gpcc-main /bin/bash"
+alias ccrerun="source ./env.sh ; /bin/bash ./stop.sh ; /bin/bash ./run.sh"
+alias loginscript="sshpass -p 'zj8&0lzyh4N#vW5Q' ssh script"
+alias slack='/Applications/Slack.app/Contents/MacOS/Slack -s %U --proxy-server="http://proxy.vmware.com:3128" &'
+alias dl='docker container ls'
+alias tcs='docker logs --tail 1000 -f $( docker ps -aqf "name=text-chat-service")'
+alias ms='docker logs --tail 1000 -f $( docker ps -aqf "name=memory-service")'
+alias css='docker logs --tail 1000 -f $( docker ps -aqf "name=chat-session-service")'
+alias as='docker logs --tail 1000 -f $( docker ps -aqf "name=avatar-service")'
+alias db='docker exec -it devops_scripts-pandora-db-1 /bin/bash'
+alias dbt='docker exec -it devops_scripts-pandora-transaction-db-1 /bin/bash'
+alias slack='/Applications/Slack.app/Contents/MacOS/Slack -s %U --proxy-server="http://proxy.vmware.com:3128" &'
+alias redis='docker exec -it devops_scripts-pandora-session-1 /bin/bash'
+alias ip='ipconfig getifaddr en0'
+```
