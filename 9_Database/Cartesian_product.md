@@ -2,7 +2,7 @@
 
 Cartesian product: `AxB` = `from` = `cross join`
 
-例如
+for example:
 
 ```sql
 select x, xx

@@ -2,6 +2,7 @@
 
 ```golang
 
-for index, item := range arr:
+for index, item := range arr {
 
+}
 ```
