@@ -13,6 +13,10 @@ First, need to know the [buffer cache](./buffer_cache.md)
 2. WAL buffer is full
 3. write periodically
 
+## wal replica
+
+
+
 ## reference
 
 [postgres documents](https://www.postgresql.org/docs/current/wal-intro.html)

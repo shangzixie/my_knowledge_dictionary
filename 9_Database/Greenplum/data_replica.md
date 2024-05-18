@@ -23,3 +23,9 @@ This can improve performance but introduces a slight risk of data loss if the pr
 
 The primary segment continuously streams WAL entries to the mirror segment. This ensures that the mirror segment is updated in near real-time with minimal lag.
 The mirror segment replays the WAL entries to apply the changes and keep its data consistent with the primary segment.
+
+## WAL
+
+on the above, the sync and async is belongs to WAL replication.
+
+Asynchrony vs. Synchrony: WAL replication can be either asynchronous or synchronous, depending on how it is set up. Sync replicas specifically refer to those WAL replicas configured for synchronous replication.
