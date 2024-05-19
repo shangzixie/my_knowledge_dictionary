@@ -4,7 +4,7 @@ is similar to the `WAL` in PostgreSQL, which is a standard method for ensuring d
 
 ## WAL Replica in Greenplum
 
-the GP keeps the WAL Synchronize to mirror of master/coordinator.
+Greenplum supports configuring a standby master at the time of initial cluster setup or added later. This standby master is kept up-to-date with the primary master through continuous WAL (Write-Ahead Logging) replication. The standby master is essentially a live copy of the primary master. It continuously receives WAL records from the primary master, which contain all the changes made to the system catalogs and other critical metadata.
 
 ## reference
 

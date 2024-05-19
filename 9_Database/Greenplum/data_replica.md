@@ -1,8 +1,10 @@
 # greenplum data replica
 
+Greenplum supports configuring a standby master at the time of initial cluster setup or added later. This standby master is kept up-to-date with the primary master through continuous WAL (Write-Ahead Logging) replication.
+
 ## How Mirror Segments Copy Data
 
-how to set could use configuration file `postgresql.conf` to set
+how to set sync or async replication could use configuration file `postgresql.conf` to set
 
 ### WAL Replication
 

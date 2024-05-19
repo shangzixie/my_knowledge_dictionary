@@ -2,6 +2,10 @@
 
 ## basic
 
+RPC is used to call other processes on remote systems as if the process were a local system. A procedure call is also sometimes known as a function call or a subroutine call.
+
+It does this using a client-server model. The requesting program is called a client, while the service-providing program is called the server.
+
 ### proto
 
 firstly, need to define a service in `helloworld.proto`
