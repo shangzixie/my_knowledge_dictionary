@@ -1,9 +1,13 @@
 # vacuum VS vacuum full
 
-"regular vacuum marks empty space for re-use, and reclaims the empty space at the end of a relation. So if the empty space is in the middle etc it can't be reclaimed just reused.
-vacuum full compacts a relation reclaiming all the empty space. It requires an exclusive lock and is bad for production systems in general because of this.
-So the purpose of REGULAR vacuum is not to reclaim space from the tables but to make it available for reuse later. The purpose of vacuum FULL is to reclaim all wasted space at the expense of an exclusive lock and db performance while it's happening.
-vacuum full will actually create new files for the table (the existing files would have shrunk to 0 size). Thus OS can reclaim the space.
+## vacuum
+
+vacuum不会压缩空间, 只是把那些标注为dead的tuple进行重新收集, 变为available的tuple, 但是这些tuple的空间并没有被释放, 也就是说, 空间并没有被压缩.
+
+## vacuum full
+
+它会锁住表, 然后创建新的区域把数据复制过去, 然后删除旧的数据, 这样就会压缩空间, 把一些dead tuple的空间释放出来.
+
 
 ## reference
 
