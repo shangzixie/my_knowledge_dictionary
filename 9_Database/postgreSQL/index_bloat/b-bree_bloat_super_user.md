@@ -3,10 +3,15 @@
 ## idx_data
 
 reltuples: Number of live rows in the table
+
 relpages: Number of pages in the table
+
 indrelid, tbloid: The OID of the pg_class entry for the table this index is for
+
 indexrelid, idxoid: The OID of the pg_class entry for this index
+
 indnatts: The total number of columns in the index
+
 indkey: This is an array of indnatts values that indicate which table columns this index indexes. For example a value of 1 3 would mean that the first and the third table columns make up the index entries.
 
 ```sql
@@ -61,10 +66,15 @@ FROM idx_data_cross;
 ## rows_data_stats
 
 maxalign: MAXALIGN, 4 on 32bits, 8 on 64bits (and mingw32 ?)
+
 pagehdr: per page header, fixed size: 20 for 7.X, 24 for others
+
 pageopqdata: the size of special zone in page
+
 nulldatawidth: all non-null columns length
+
 nulldatawidth: index tuple header length (IndexTupleData size + IndexAttributeBitMapData size ( max num filed per index + 8 - 1 /8))
+
 bs: one page's size
 
 ```sql
@@ -136,9 +146,13 @@ from rows_data_stats;
 
 4 is the item pointer size
 `how many rows could insert one page = (all items pointer size + all tuples size) in a page / (one item pointer size + one data row size) = bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)`
+
 `how many pages used if all size is fulfilled = reltuples/floor((bs-pageopqdata-pagehdr)/(4+nulldatahdrwidth)`
+
 reltuples: the number of live tuples in a page
+
 est_pages：the number of used pages (without bloat), not consider fillfactor
+
 est_pages_ff：the number of used pages, consider fillfactor
 
 ```sql
