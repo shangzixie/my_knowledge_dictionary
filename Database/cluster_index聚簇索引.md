@@ -24,3 +24,21 @@ mysql采用上述举例方式
 PG没有聚簇索引, 这是因为PostgreSQL 默认情况下使用堆表来存储数据。这意味着数据行在插入时存储在表的下一个可用位置，没有特定的物理顺序。PostgreSQL 支持通过 `CLUSTER` 命令手动对表进行聚簇。聚簇操作将表的数据重新排序，使其按指定的索引键顺序存储。这种操作会将数据物理顺序与指定的索引键对齐，但这种排序不会自动维护，数据插入或更新后需要重新聚簇以保持顺序。
 
 pg的索引都是单独再建立的二次索引表.
+
+举个例子:
+
+```sql
+CREATE TABLE employees (
+    employee_id SERIAL PRIMARY KEY,
+    name VARCHAR(50),
+    position VARCHAR(50)
+);
+
+-- 创建一个B-Tree索引
+CREATE INDEX idx_employee_name ON employees (name);
+```
+
+在这个例子中，B-Tree 索引 idx_employee_name 的叶子节点存储的内容如下：
+
+* 索引键：name 列的值。
+* 行位置标识符：指向数据行在堆表中的位置（CTID）。
