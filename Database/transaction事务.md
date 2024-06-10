@@ -36,6 +36,28 @@ PostgreSQL：
 
 **缓冲区管理方式**：Greenplum、PostgreSQL、MySQL、Oracle 都采用 buffer pool 方式进行缓冲区管理。
 
+## 隐式事务
+
+mysql的innodb和postgres对待每个单一的sql都是隐式事务, 也就是在每个sql前面默认加上`begin`,在末尾加上`commit`
+
+## savepoint
+
+It's possible to control the statements in a transaction in a more granular fashion through the use of `savepoints`. Savepoints allow you to selectively discard parts of the transaction, while committing the rest. After defining a savepoint with `SAVEPOINT`, you can if needed roll back to the savepoint with `ROLLBACK TO`. All the transaction's database changes between defining the savepoint and rolling back to it are discarded, but changes earlier than the savepoint are kept.
+
+```sql
+BEGIN;
+UPDATE accounts SET balance = balance - 100.00
+    WHERE name = 'Alice';
+SAVEPOINT my_savepoint;
+UPDATE accounts SET balance = balance + 100.00
+    WHERE name = 'Bob';
+-- oops ... forget that and use Wally's account
+ROLLBACK TO my_savepoint;
+UPDATE accounts SET balance = balance + 100.00
+    WHERE name = 'Wally';
+COMMIT;
+```
+
 ## Write-Ahead Logging (WAL) 策略
 
 在数据库中，关于事务和 buffer pool，有四种写入策略：
