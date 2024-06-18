@@ -3,11 +3,17 @@
 ## idx_data
 
 reltuples: Number of live rows in the table
+
 relpages: Number of pages in the table
+
 indrelid, tbloid: The OID of the pg_class entry for the table this index is for
+
 indexrelid, idxoid: The OID of the pg_class entry for this index
+
 indnatts: The total number of columns in the index
-indkey: This is an array of indnatts values that indicate which table columns this index indexes. For example a value of 1 3 would mean that the first and the third table columns make up the index entries.
+
+indkey: This is an array of indnatts values that indicate which table columns this index indexes. For example a value of 1 3
+would mean that the first and the third table columns make up the index entries.
 
 ```sql
 create view idx_data as
