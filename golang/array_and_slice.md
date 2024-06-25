@@ -236,3 +236,52 @@ func main() {
 
 deep equal: `reflect.DeepEqual(x, y)`
 there is no shallow euqal in slice
+
+### slice扩容
+
+切片在运行时的表示为reflect.SliceHeader，其结构如下
+
+```golang
+type SliceHeader struct {
+   Data uintptr // 底层数组的指针
+   Len  int     // 切片的长度
+   Cap  int     // 切片的容量
+}
+```
+
+slice扩容时会调用`runtime.growslice`函数. 假设一个slice初始cap容量为3, 已经有3个元素, 所以长度为3. 现在往里面append一个数, 我们向`growslice`函数传入的cap就为4, 这个cap是期望容量. 但是扩容后的容量并不是按照期望容量来的, 扩容后的容量是按照以下规则来的:
+
+* 如果期望容量大于当前容量的两倍就会使用期望容量；
+* 如果当前切片的长度小于 1024 就会将容量翻倍；
+* 如果当前切片的长度大于 1024 就会每次增加 25% 的容量，直到新容量大于期望容量；
+
+
+```golang
+func growslice(et *_type, old slice, cap int) slice {
+    // 省略了部分代码
+    newcap := old.cap
+    // doublecap为旧切片容量的2倍
+    doublecap := newcap + newcap
+    // 如果期望容量 > doublecap,则直接将期望容量作为新的容量
+    if cap > doublecap {
+        newcap = cap
+    } else {
+        // 判断旧切片的容量，如果小于1024，则将旧切片的容量翻倍
+        if old.cap < 1024 {
+            newcap = doublecap
+        } else {
+            // 每次增长1/4,直到容量大于期望容量
+            for 0 < newcap && newcap < cap {
+                newcap += newcap / 4
+            }
+            // 如果旧切片容量小于等于0，则直接将期望容量作为新容量
+            if newcap <= 0 {
+                newcap = cap
+            }
+        }
+    }
+    // 省略了部分代码
+}
+
+```
+
