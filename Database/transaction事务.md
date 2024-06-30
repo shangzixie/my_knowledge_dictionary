@@ -60,6 +60,12 @@ PostgreSQL：
 
 ![106](/Image/database/109.png)
 
+## 悲观锁和乐观锁实现
+
+悲观锁`select ... for update`
+
+乐观锁`基于CAS`
+
 ## 隐式事务
 
 mysql的innodb和postgres对待每个单一的sql都是隐式事务, 也就是在每个sql前面默认加上`begin`,在末尾加上`commit`
