@@ -1,5 +1,22 @@
 # array vs slice
 
+- [array vs slice](#array-vs-slice)
+  - [Array VS Slice](#array-vs-slice-1)
+  - [Array](#array)
+    - [build an array](#build-an-array)
+    - [not reference type](#not-reference-type)
+    - [compare](#compare)
+  - [slice](#slice)
+    - [A slice contains three components](#a-slice-contains-three-components)
+    - [build an slice](#build-an-slice)
+    - [nil slice](#nil-slice)
+    - [slice reference  array](#slice-reference--array)
+    - [切片的传递](#切片的传递)
+    - [compare](#compare-1)
+    - [slice扩容](#slice扩容)
+  - [reference](#reference)
+
+
 ## Array VS Slice
 
 1. when using `make()`, it will create a slice, not an array.
@@ -28,8 +45,13 @@ array_name := [...]string{"GFG", "gfg", "geeks", "GeeksforGeeks", "GEEK"}
 
 
 // initialize a 2d array
+ var arr [2][3]int
 array1 := [2][]int{[]int{1},[]int{2}}
 array2 := [2][]int{{1}, {2}}
+arr := [2][3]int{
+        {1, 2, 3},
+        {4, 5, 6},
+    }
 ```
 
 we can't build an array with a variable length, the length must be a constant.
@@ -157,6 +179,7 @@ var my_slice_2 = make([]int, 7) // [0 0 0 0 0 0 0], len and cap are 7
 // initialize a 2d slice
 slice1 := [][]int{[]int{1},[]int{2}}
 slice2 := [][]int{{1}, {2}}
+slice3 := make([][]int, rows)
 ```
 
 ### nil slice
