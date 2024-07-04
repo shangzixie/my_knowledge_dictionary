@@ -52,6 +52,22 @@ redo log 记录了此次事务「完成后」的数据状态，记录的是更�
 
 undo log 记录了此次事务「开始前」的数据状态，记录的是更新之前的值；
 
+## binlog
+
+MySQL 在完成一条更新操作后，Server 层还会生成一条 binlog，等之后事务提交的时候，会将该事物执行过程中产生的所有 binlog 统一写 入 binlog 文件。
+
+binlog 文件是记录了所有数据库表结构变更和表数据修改的日志，不会记录查询类的操作，比如 SELECT 和 SHOW 操作。
+
+为什么有了 binlog， 还要有 redo log？最开始 MySQL 里并没有 InnoDB 引擎，MySQL 自带的引擎是 MyISAM，但是 MyISAM 没有 crash-safe 的能力，binlog 日志只能用于归档。
+
+![121](/Image/database/124.png)
+
+### 如果不小心整个数据库的数据被删除了，能使用 redo log 文件恢复数据吗？
+
+不可以使用 redo log 文件恢复，只能使用 binlog 文件恢复。
+
+因为 redo log 文件是循环写，是会边写边擦除日志的，只记录未被刷入磁盘的数据的物理日志，已经刷入磁盘的数据都会从 redo log 文件里擦除。
+
 ## reference
 
 [小林](https://xiaolincoding.com/mysql/log/how_update.html#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-undo-log)
