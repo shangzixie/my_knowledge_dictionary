@@ -1,4 +1,4 @@
-# read view一致性视图图
+# 理解undo log 和 read view一致性视图图
 
 pg和mysql默认都是隐藏事务, 一条sql也会默认开启事务
 
