@@ -99,7 +99,7 @@ SELECT * FROM users WHERE age > 20 FOR UPDATE;
 
 ## 悲观锁和乐观锁实现
 
-悲观锁`select ... for update`
+悲观锁`select ... for update`, 通过 next-key lock（记录锁+间隙锁）方式解决了幻读
 
 乐观锁`基于CAS`
 
