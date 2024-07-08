@@ -140,8 +140,6 @@ func main() {
 }
 ```
 
-
-
 ## slice
 
 ### A slice contains three components

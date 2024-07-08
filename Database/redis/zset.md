@@ -31,7 +31,6 @@ MySQL 的 B+ 树和 Redis 的跳表都是用于存储有序数据的数据结构
 
 4. 范围查询：B+ 树的所有叶子节点形成了一个有序链表，因此非常适合进行范围查询。而跳表虽然也可以进行范围查询，但效率相对较低。
 
-
 ## reference
 
 [包含ziplist和listpack](https://blog.csdn.net/u013277209/article/details/125998869)

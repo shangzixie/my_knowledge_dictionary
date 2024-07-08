@@ -16,7 +16,6 @@ First, need to know the [buffer cache](./buffer_cache.md)
 ## wal replica
 
 
-
 ## reference
 
 [postgres documents](https://www.postgresql.org/docs/current/wal-intro.html)

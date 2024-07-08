@@ -12,7 +12,8 @@ One of the common needs for a REINDEX is when indexes become bloated due to eith
 
 * [bloat view (Dimitri Fontaine)](https://web.archive.org/web/20080603000756/http://pgsql.tapoueh.org/site/html/news/20080131.bloat.html) - extracted from check_postgres
 * [Visualizing Postgres](https://www.pgcon.org/2009/schedule/events/153.en.html) - index_byte_sizes view (Michael Glaesemann, myYearbook)
-* [OmniTI Tasty Treats for PostgreSQL](https://github.com/omniti-labs/) - shell and Perl pg_bloat_report scripts
+* [OmniTI Tasty Treats for Postgre
+* SQL](https://github.com/omniti-labs/) - shell and Perl pg_bloat_report scripts
 
 ## New query
 
