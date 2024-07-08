@@ -46,12 +46,13 @@ array_name := [...]string{"GFG", "gfg", "geeks", "GeeksforGeeks", "GEEK"}
 
 // initialize a 2d array
  var arr [2][3]int
-array1 := [2][]int{[]int{1},[]int{2}}
-array2 := [2][]int{{1}, {2}}
-arr := [2][3]int{
+array1 := [2][]int{[]int{1},[]int{2}}  // array1 is an array and its item is a slice
+array2 := [2][]int{{1}, {2}} // array2 is an array and its item is a slice
+array3 := [2][3]int{
         {1, 2, 3},
         {4, 5, 6},
-    }
+    }  // array3 is an array and its item is an array
+array4 := [2][3]int{} // array4 is an array and its item is an array
 ```
 
 we can't build an array with a variable length, the length must be a constant.
