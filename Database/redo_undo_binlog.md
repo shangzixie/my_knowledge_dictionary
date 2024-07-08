@@ -46,6 +46,12 @@ redo log 是记录数据页修改的物理日志。每个事务执行时生成�
 
 ![121](/Image/database/123.png)
 
+### redo log 缓冲区
+
+执行一个事务的过程中，产生的 redo log 也不是直接写入磁盘的，因为这样会产生大量的 I/O 操作，而且磁盘的运行速度远慢于内存。所以，redo log 也有自己的缓存—— redo log buffer，每当产生一条 redo log 时，会先写入到 redo log buffer，后续在持久化到磁盘如下图：
+
+![125](/Image/database/125.png)
+
 ## redo undo区别
 
 redo log 记录了此次事务「完成后」的数据状态，记录的是更新之后的值；
