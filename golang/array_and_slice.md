@@ -272,7 +272,6 @@ func main() {
 
 其实不是的，我们上面说了，一切参数传递都是值传递，slice当然也不例外 ，结合我们刚刚了解的slice的结构，我们在向bar中传递参数时，是将slice的结构体拷贝了一份而并非拷贝了底层数组本身，因为slice的结构体内持有底层数组的指针，所以在bar内修改slice的数据会将底层数组的数据修改，从而影响到main函数中的slice。
 
-
 ### compare
 
 `==` just use to compare with `nil`, If try to compare two slices with `==` then it will give an error
