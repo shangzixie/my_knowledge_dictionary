@@ -11,9 +11,14 @@
 ## design fan-out
 
 There are two ways to implement fan-out:
-    1. user request timeline update -> find all the user's followees -> get all their tweets -> combine into timeline
-    2. every user maintains a timeline cache -> a user post a tweet -> find all followers/fans of the user -> insert the tweet into their timeline cache
-[reference link](https://github.com/shangzixie/ddia/blob/main/ch1.md)
+
+1. user request timeline update -> find all the user's followees -> get all their tweets -> combine into timeline
+
+![](/Image/system_design/97.png)
+
+2. every user maintains a timeline cache -> a user post a tweet -> find all followers/fans of the user -> insert the tweet into their timeline cache
+
+![](/Image/system_design/98.png)
 
 because the user request timeline update request workload is 300k/s, and the request of the user post a tweet is 4.6k/s, so we choose the second way to implement fan-out.
 
@@ -23,3 +28,6 @@ because the user request timeline update request workload is 300k/s, and the req
 
 推特轶事的最终转折：现在已经稳健地实现了方法 2，推特逐步转向了两种方法的混合。大多数用户发的推文会被fan out写入其粉丝主页时间线缓存中。但是少数拥有海量粉丝的用户（即名流）会被排除在外。当用户读取主页时间线时，分别地获取出该用户所关注的每位名流的推文，再与用户的主页时间线缓存合并，如方法 1 所示。这种混合方法能始终如一地提供良好性能。
 
+## reference
+
+[reference link](https://github.com/shangzixie/ddia/blob/main/ch1.md)
