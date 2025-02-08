@@ -28,3 +28,7 @@ flock() places it's locks via a FD on a "Open file description"
 **therefore flock() may be used to synchronize file access among processes as well as threads (in one ore more processes).**
 
 see flock(2) and especially open(2) man pages for details on "Open file descriptions".
+
+## conclusion
+
+flock couldn't use for thread just for process but fcntl could.
