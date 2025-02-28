@@ -2,11 +2,11 @@
 
 1. `Author a;`
 
-it is in `stack` memory. This also directly default-constructs an object a of type Author using its default constructor.
+it is in `stack` memory. This default constructor.
 
-2. `Author a = Author();`
+1. `Author a = Author();`
 
-it is in `stack` memory. it's default constructor,
+it is in `stack` memory. it's default constructor
 
 ![2](/Image/C++/2.png)
 
